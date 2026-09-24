@@ -1,28 +1,14 @@
-import mysql from 'mysql2'
+import mysql from 'mysql2/promise'
+import 'dotenv/config'
 
-const connection = mysql.createConnection({
-    host:'localhost',
-    port: '3306',
-    user: 'root',
-    password: 'root',
-    database: 'db_raizes_do_nordeste'
+const connection = mysql.createPool({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT, 
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME
 })
 
-
-connection.connect()
-
-export const consulta = (sql, values='', mensagemReject) =>{
-    return new Promise((resolve, reject) =>{
-        connection.query(sql, values, (error, result) =>{
-            if(error) {
-                return reject(mensagemReject)
-            } else {
-                const rows = JSON.parse(JSON.stringify(result))
-                return resolve(rows)
-            }
-        })
-    })
-}
 
 export default connection
 
