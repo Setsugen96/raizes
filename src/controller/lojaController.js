@@ -8,12 +8,12 @@ class LojaController {
 
         try {
 
-            const nova_loja = req.body 
-            const loja_cadastrada = await LojaService.cadastrar(nova_loja)
+            const novaLoja = req.body 
+            const lojaCadastrada = await LojaService.cadastrar(novaLoja)
 
             return res.status(201).json({
                 message: "Loja adicionada com sucesso.", 
-                loja: loja_cadastrada
+                loja: lojaCadastrada
             })
 
         } catch (error) {
@@ -41,12 +41,12 @@ class LojaController {
         try {
 
             const id = req.params.id
-            const loja_encontrada = await LojaService.buscarPorId(id)      
-            if(loja_encontrada) {
+            const lojaEncontrada = await LojaService.buscarPorId(id)      
+            if(lojaEncontrada) {
 
                 return res.status(200).json({
                 message: "Loja Encontrada com sucesso",
-                loja: loja_encontrada
+                loja: lojaEncontrada
                 })
             } 
 
@@ -90,11 +90,11 @@ class LojaController {
 
         try {
             const id = req.params.id 
-            const novos_dados = req.body
+            const novosDados = req.body
 
-            const loja_atualizada = await LojaService.alterar(id, novos_dados)
+            const lojaAtualizada = await LojaService.alterar(id, novosDados)
 
-            if(loja_atualizada.affectedRows > 0) {
+            if(lojaAtualizada.affectedRows > 0) {
                 return res.status(200).json({
                     message: "Loja atualizada com sucesso."
                 })
@@ -129,13 +129,13 @@ class LojaController {
         try {
 
             const id = req.params.id
-            const loja_deletada = await LojaService.deletar(id)
+            const lojaDeletada = await LojaService.deletar(id)
         
-            if(loja_deletada.affectedRows > 0) {
+            if(lojaDeletada.affectedRows > 0) {
 
                 return res.status(200).json({
                 message: "Loja deletada com sucesso",
-                loja: loja_deletada
+                loja: lojaDeletada
                 })
             } 
 

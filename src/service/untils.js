@@ -10,6 +10,12 @@ export const estadosDisponveis = new Set([
     "sergipe"
 ])
 
+const rolesDisponivels = new Set([
+    "cliente",
+    "gerente",
+    "atendente"
+])
+
 export default class ErroValidacao extends Error {
     constructor(message) {
         super(message)
@@ -21,13 +27,27 @@ export function validarEstado(estado) {
         if(!estado || estado.trim() === '') {
             throw new ErroValidacao("Nome do estado é obrigatório.")
         }
-            const estadoFormatado = estado.trim().toLowerCase()
+        const estadoFormatado = estado.trim().toLowerCase()
         
-            if(!estadosDisponveis.has(estadoFormatado)) {
-                throw new ErroValidacao("Estado inválido.")
-            }  
+        if(!estadosDisponveis.has(estadoFormatado)) {
+            throw new ErroValidacao("Estado inválido.")
+        }  
         
-            return estadoFormatado.toUpperCase()
+        return estadoFormatado.toUpperCase()
+}
+
+export function validarRole(role) {
+    if(!role || role.trim() === '') {
+        throw new ErroValidacao("Definir a Role é obrigatório") 
+    }
+
+    const roleFormatada = role.trim().toLowerCase()
+
+    if(!rolesDisponivels.has(roleFormatada)) {
+        throw new ErroValidacao("Role inválida")
+    }
+
+    return roleFormatada.toUpperCase()
 }
 
 export function validarEntradaTexto(entrada, mensagem_erro) {
@@ -39,7 +59,7 @@ export function validarEntradaTexto(entrada, mensagem_erro) {
 }
 
 export function validarId(id) {
-    if(id === '' || isNaN(id)) {
+    if(id === '' || isNaN(id) || id < 1) {
         throw new ErroValidacao("Id dos dados inválido")
     }
 

@@ -8,12 +8,12 @@ class ProdutoController {
 
         try {
             
-            const novo_produto = req.body
-            const produto_cadastrado = await ProdutoService.cadastrar(novo_produto)
+            const novoProduto = req.body
+            const produtoCadastrado = await ProdutoService.cadastrar(novoProduto)
 
             return res.status(201).json({
                 message: "Produto cadastrado com sucesso",
-                produto: produto_cadastrado
+                produto: produtoCadastrado
             })
 
         } catch (error) {
@@ -41,16 +41,16 @@ class ProdutoController {
         try {
 
             const id = req.params.id
-            const produto_encontrado = await ProdutoService.buscarPorId(id)
+            const produtoEncontrado = await ProdutoService.buscarPorId(id)
             
-            if(produto_encontrado) {
+            if(produtoEncontrado) {
                 return res.status(200).json({
                 message: "Produto encontrado com sucesso",
-                produto: produto_encontrado
+                produto: produtoEncontrado
                 })
             } 
             return res.status(404).json({
-                        message: "Produto não encontrado."
+                    message: "Produto não encontrado."
                 })      
                 
             } catch (error) {
@@ -81,8 +81,8 @@ class ProdutoController {
 
             return res.status(500).json({
                 message: error.message
-                })
-            }      
+            })
+        }      
     }
 
     async update(req, res) {
@@ -90,11 +90,11 @@ class ProdutoController {
         try {
 
             const id = req.params.id 
-            const novos_dados = req.body
+            const novosDados = req.body
     
-            const produto_atualizado = await ProdutoService.alterar(id, novos_dados)
+            const produtoAtualizado = await ProdutoService.alterar(id, novosDados)
     
-            if(produto_atualizado.affectedRows > 0) {
+            if(produtoAtualizado.affectedRows > 0) {
                 return res.status(200).json({
                     message: "Produto alterado com sucesso."
                 })
@@ -129,12 +129,12 @@ class ProdutoController {
             try {
         
                 const id = req.params.id
-                const produto_deletado = await ProdutoService.deletar(id)
+                const produtoDeletado = await ProdutoService.deletar(id)
                 
-                if(produto_deletado.affectedRows > 0) {
+                if(produtoDeletado.affectedRows > 0) {
                     return res.status(200).json({
                     message: "Produto deletado com sucesso",
-                    produto: produto_deletado
+                    produto: produtoDeletado
                     })
                 } 
         

@@ -101,9 +101,9 @@ class CardapioService {
 
     async alterar(id, cardapio_atualizado) {
 
-        const cardapio_existente = await CardapioModel.findById(id)
+        const cardapioExistente = await CardapioModel.findById(id)
         
-        if(!cardapio_existente) {
+        if(!cardapioExistente) {
             return null 
         }
 
@@ -116,8 +116,29 @@ class CardapioService {
             throw new ErroValidacao("Nenhum dado foi informado para atualização.")
         }
         
+        if(cardapio_atualizado.loja_id !== undefined && cardapio_atualizado.produto_id !== undefined) {
+
+            cardapio_atualizado.loja_id = validarId(cardapio_atualizado.loja_id)
+            cardapio_atualizado.produto_id = validarId(cardapio_atualizado.produto_id)
+
+            const loja = await LojaModel.findById(cardapio_atualizado.loja_id)
+            const produto = await ProdutoModel.findById(cardapio_atualizado.produto_id)
+
+            if(!loja) {
+                throw new ErroValidacao("Loja não foi encontrada.")
+            }  
+
+            if(!produto) {
+                throw new ErroValidacao("Produto não encontrado.")
+            }  
+
+            if (loja.estado !== produto.estado) {
+                throw new ErroValidacao("Estado do produto e da loja não podem ser diferentes.")
+            }
+            
+        }
       
-        if(cardapio_atualizado.loja_id !== undefined) {
+        if(cardapio_atualizado.loja_id !== undefined && cardapio_atualizado.produto_id === undefined) {
             cardapio_atualizado.loja_id = validarId(cardapio_atualizado.loja_id)
             const loja = await LojaModel.findById(cardapio_atualizado.loja_id)
 
@@ -127,15 +148,15 @@ class CardapioService {
             
             // Busca e comparação de ESTADO com a linha já existente do cardápio
             
-            const produto_cardapio = await ProdutoModel.findById(cardapio_existente.produto_id)
+            const produtoCardapio = await ProdutoModel.findById(cardapioExistente.produto_id)
 
-            if(loja.estado !== produto_cardapio.estado) {
+            if(loja.estado !== produtoCardapio.estado) {
                 throw new ErroValidacao("Estado do produto e da loja não podem ser diferentes.")
             }
             
         }
 
-        if(cardapio_atualizado.produto_id !== undefined) {
+        if(cardapio_atualizado.produto_id !== undefined && cardapio_atualizado.loja_id === undefined) {
             cardapio_atualizado.produto_id = validarId(cardapio_atualizado.produto_id)
             const produto = await ProdutoModel.findById(cardapio_atualizado.produto_id)
 
@@ -143,9 +164,9 @@ class CardapioService {
                 throw new ErroValidacao("Produto não encontrado.")
             }  
             
-            const loja_cardapio = await LojaModel.findById(cardapio_existente.loja_id)
+            const lojaCardapio = await LojaModel.findById(cardapioExistente.loja_id)
 
-            if(produto.estado !== loja_cardapio.estado) {
+            if(produto.estado !== lojaCardapio.estado) {
                 throw new ErroValidacao("Estado do produto e da loja não podem ser diferentes.")
             }
         }

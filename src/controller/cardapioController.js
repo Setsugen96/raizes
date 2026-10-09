@@ -7,11 +7,11 @@ class CardapioController {
 
         try {
 
-            const novo_cardapio = req.body
-            const cardapio_cadastrado = await CardapioService.cadastrar(novo_cardapio)
+            const novoCardapio = req.body
+            const cardapioCadastrado = await CardapioService.cadastrar(novoCardapio)
             return res.status(201).json({
                 message: "Cardapio cadastrado com sucesso",
-                cardapio: cardapio_cadastrado
+                cardapio: cardapioCadastrado
             })
 
         } catch (error) {
@@ -39,12 +39,12 @@ class CardapioController {
             try {
     
                 const id = req.params.id
-                const cardapio_encontrado = await CardapioService.buscarPorId(id)      
-                if(cardapio_encontrado) {
+                const cardapioEncontrado = await CardapioService.buscarPorId(id)      
+                if(cardapioEncontrado) {
     
                     return res.status(200).json({
                     message: "Linha do cardápio Encontrado com sucesso",
-                    cardapio: cardapio_encontrado
+                    cardapio: cardapioEncontrado
                     })
                 } 
     
@@ -82,17 +82,17 @@ class CardapioController {
             try {
     
                 const id = req.params.id 
-                const novos_dados = req.body
+                const novosDados = req.body
         
-                const cardapio_atualizado = await CardapioService.alterar(id, novos_dados)
+                const cardapioAtualizado = await CardapioService.alterar(id, novosDados)
 
-                if(!cardapio_atualizado) {
+                if(!cardapioAtualizado) {
                     return res.status(404).json({
                         message: "Cardápio não encontrado"
                     })
                 }
         
-                if(cardapio_atualizado.affectedRows > 0) {
+                if(cardapioAtualizado.affectedRows > 0) {
                     return res.status(200).json({
                         message: "Cardápio alterado com sucesso."
                     })
@@ -123,13 +123,12 @@ class CardapioController {
             try {
     
                 const id = req.params.id
-                const cardapio_deletado = await CardapioService.deletar(id)
+                const cardapioDeletado = await CardapioService.deletar(id)
             
-                if(cardapio_deletado.affectedRows > 0) {
+                if(cardapioDeletado.affectedRows > 0) {
     
                     return res.status(200).json({
                     message: "Cardápio deletado com sucesso",
-                    cardapio: cardapio_deletado
                     })
                 } 
     
