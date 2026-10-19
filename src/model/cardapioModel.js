@@ -98,6 +98,14 @@ class CardapioModel {
 
     }
 
+    async findByLojaProduto(loja_id, produto_id) {
+        const sql = 'SELECT * FROM cardapio WHERE loja_id = ? AND produto_id = ?'
+
+        const [rows] = await connection.execute(sql, [loja_id, produto_id])
+
+        return rows[0]
+    }
+
     async update(id, cardapio_atualizado) {
 
         const params = []

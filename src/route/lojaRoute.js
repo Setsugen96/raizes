@@ -6,16 +6,16 @@ import AuthorizationMiddleware from "../middleware/authorizationMiddleware.js";
 const LojaRota = Router()
 
 // POST 
-LojaRota.post('/lojas', AuthMiddleware.autenticarToken, AuthorizationMiddleware.verificarRole('ADMINISTRADOR'),  LojaController.store)
+LojaRota.post('/lojas', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR'),  LojaController.store)
 
 // GETS 
-LojaRota.get('/lojas/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.verificarRole('ADMINISTRADOR', 'CLIENTE', 'ATENDENTE', 'GERENTE'), LojaController.show)
-LojaRota.get('/lojas', AuthMiddleware.autenticarToken, AuthorizationMiddleware.verificarRole('ADMINISTRADOR', 'CLIENTE', 'ATENDENTE', 'GERENTE'), LojaController.index)
+LojaRota.get('/lojas/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'CLIENTE', 'ATENDENTE', 'GERENTE'), LojaController.show)
+LojaRota.get('/lojas', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'CLIENTE', 'ATENDENTE', 'GERENTE'), LojaController.index)
 
 //PUT
-LojaRota.put('/lojas/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.verificarRole('ADMINISTRADOR', 'GERENTE'),  LojaController.update)
+LojaRota.put('/lojas/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'),  LojaController.update)
 
 // DELETE
-LojaRota.delete('/lojas/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.verificarRole('ADMINISTRADOR'),  LojaController.delete)
+LojaRota.delete('/lojas/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR'),  LojaController.delete)
 
 export default LojaRota 

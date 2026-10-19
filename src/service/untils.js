@@ -16,6 +16,23 @@ const rolesDisponivels = new Set([
     "atendente"
 ])
 
+const canaisDisponiveis = new Set([
+    "app",
+    "totem",
+    "balcão",
+    "pickup",
+    "web"
+])
+
+const statusDisponiveis = new Set([
+    "pendente",
+    "em preparo",
+    "em rota de entrega",
+    "aceito",
+    "cancelado",
+    "finalizado"
+])
+
 export default class ErroValidacao extends Error {
     constructor(message) {
         super(message)
@@ -23,20 +40,60 @@ export default class ErroValidacao extends Error {
     }
 }
 
+
+
+export function validarStatus(status) {
+
+    if(!isNaN(Number(status))) {
+        throw new ErroValidacao("Dados inválidos")
+    }
+
+    status = validarEntradaTexto(status, "Informar o novo status do Pedido é obrigatório.")
+    const statusFormatado = status.toLowerCase()
+
+    if(!statusDisponiveis.has(statusFormatado)) {
+        throw new ErroValidacao("Status inválido.")
+    }
+
+    return statusFormatado.toUpperCase()
+}
+
+export function validarCanal(canal) {
+    
+     if(!isNaN(Number(canal))) {
+        throw new ErroValidacao("Dados inválidos")
+    }
+
+    canal = validarEntradaTexto(canal, "Informar o Canal do Pedido é obrigatório.")
+    const canalFormatado = canal.trim().toLowerCase()
+        
+    if(!canaisDisponiveis.has(canalFormatado)) {
+        throw new ErroValidacao("Canal inválido.")
+    }  
+        
+    return canalFormatado.toUpperCase()
+}
+
+
 export function validarEstado(estado) {
-        if(!estado || estado.trim() === '') {
-            throw new ErroValidacao("Nome do estado é obrigatório.")
-        }
-        const estadoFormatado = estado.trim().toLowerCase()
+
+    if(!estado || estado.trim() === '') {
+        throw new ErroValidacao("Nome do estado é obrigatório.")
+    }
+
+    estado = validarEntradaTexto(estado, "Informar o Estado é obrigatório")
+
+    const estadoFormatado = estado.trim().toLowerCase()
         
-        if(!estadosDisponveis.has(estadoFormatado)) {
-            throw new ErroValidacao("Estado inválido.")
-        }  
+    if(!estadosDisponveis.has(estadoFormatado)) {
+        throw new ErroValidacao("Estado inválido.")
+    }  
         
-        return estadoFormatado.toUpperCase()
+    return estadoFormatado.toUpperCase()
 }
 
 export function validarRole(role) {
+
     if(!role || role.trim() === '') {
         throw new ErroValidacao("Definir a Role é obrigatório") 
     }

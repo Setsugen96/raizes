@@ -177,7 +177,7 @@ class CardapioService {
             cardapio_atualizado.data_fim = datas[1]
     
         }
-
+        
         return await CardapioModel.update(id, cardapio_atualizado)
     }
 

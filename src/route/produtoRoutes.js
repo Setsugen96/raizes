@@ -6,16 +6,16 @@ import AuthorizationMiddleware from "../middleware/authorizationMiddleware.js";
 const ProdutoRota = Router()
 
 // POST 
-ProdutoRota.post('/produtos', AuthMiddleware.autenticarToken, AuthorizationMiddleware.verificarRole('ADMINISTRADOR'), ProdutoController.store)
+ProdutoRota.post('/produtos', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR'), ProdutoController.store)
 
 // GETS 
-ProdutoRota.get('/produtos/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.verificarRole('ADMINISTRADOR', 'GERENTE'), ProdutoController.show)
-ProdutoRota.get('/produtos', AuthMiddleware.autenticarToken, AuthorizationMiddleware.verificarRole('ADMINISTRADOR', 'GERENTE'), ProdutoController.index)
+ProdutoRota.get('/produtos/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'), ProdutoController.show)
+ProdutoRota.get('/produtos', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'), ProdutoController.index)
 
 //PUT
-ProdutoRota.put('/produtos/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.verificarRole('ADMINISTRADOR'), ProdutoController.update)
+ProdutoRota.put('/produtos/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR'), ProdutoController.update)
 
 // DELETE
-ProdutoRota.delete('/produtos/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.verificarRole('ADMINISTRADOR'), ProdutoController.delete)
+ProdutoRota.delete('/produtos/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR'), ProdutoController.delete)
 
 export default ProdutoRota

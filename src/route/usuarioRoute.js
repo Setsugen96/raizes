@@ -7,15 +7,15 @@ const UsuarioRota = Router()
 
 //POST
 UsuarioRota.post('/usuarios', UsuarioController.storeCliente)
-UsuarioRota.post('/usuarios/funcionario', AuthMiddleware.autenticarToken , AuthorizationMiddleware.verificarRole('ADMINISTRADOR','GERENTE') , AuthorizationMiddleware.verificarCadastro(), UsuarioController.store)
+UsuarioRota.post('/usuarios/funcionario', AuthMiddleware.autenticarToken , AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR','GERENTE') , AuthorizationMiddleware.autorizarCadastroUsuario(), UsuarioController.store)
 
 //GETS
-UsuarioRota.get('/usuarios/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.verificarRole('ADMINISTRADOR','GERENTE'), AuthorizationMiddleware.verificarLojaFuncionario(), UsuarioController.show)
-UsuarioRota.get('/usuarios',AuthMiddleware.autenticarToken, AuthorizationMiddleware.verificarRole('ADMINISTRADOR','GERENTE'),AuthorizationMiddleware.verificarLojaRole(),  UsuarioController.index)
+UsuarioRota.get('/usuarios/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR','GERENTE'), AuthorizationMiddleware.autorizarAcessoFuncionario(), UsuarioController.show)
+UsuarioRota.get('/usuarios',AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR','GERENTE'),AuthorizationMiddleware.autorizarConsultaUsuarios(),  UsuarioController.index)
 
 //UPDATE
-UsuarioRota.put('/usuarios/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.verificarRole('ADMINISTRADOR', 'CLIENTE', 'ATENDENTE', 'GERENTE'), AuthorizationMiddleware.verificarUpdateUsuario(),  UsuarioController.update)
+UsuarioRota.put('/usuarios/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'CLIENTE', 'ATENDENTE', 'GERENTE'), AuthorizationMiddleware.autorizarAtualizacaoUsuario(),  UsuarioController.update)
 
 //DELETE
-UsuarioRota.delete('/usuarios/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.verificarRole('ADMINISTRADOR', 'GERENTE'),AuthorizationMiddleware.verificarLojaFuncionario(), UsuarioController.delete)
+UsuarioRota.delete('/usuarios/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'),AuthorizationMiddleware.autorizarAcessoFuncionario(), UsuarioController.delete)
 export default UsuarioRota

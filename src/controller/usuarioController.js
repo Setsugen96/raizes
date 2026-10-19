@@ -108,7 +108,7 @@ class UsuarioController {
             const usuarios = await UsuarioService.listar(page, limit, role, loja_id)
             res.status(200).json(usuarios)
 
-        } catch(error) {
+        } catch (error) {
 
             if(error.name === "ErroValidacao") {
                 return res.status(400).json({
