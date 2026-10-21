@@ -10,13 +10,13 @@ export const estadosDisponveis = new Set([
     "sergipe"
 ])
 
-const rolesDisponivels = new Set([
+export const rolesDisponivels = new Set([
     "cliente",
     "gerente",
     "atendente"
 ])
 
-const canaisDisponiveis = new Set([
+export const canaisDisponiveis = new Set([
     "app",
     "totem",
     "balcão",
@@ -24,14 +24,27 @@ const canaisDisponiveis = new Set([
     "web"
 ])
 
-const statusDisponiveis = new Set([
+export const statusDisponiveis = new Set([
     "pendente",
     "em preparo",
     "em rota de entrega",
-    "aceito",
     "cancelado",
     "finalizado"
 ])
+
+export const pagamentosDisponiveis = new Set([
+    "pix",
+    "cartao",
+    "dinheiro"
+])
+
+export const statusPagamentos = new Set([
+    "aguardando",
+    "pago",
+    "cancelado",
+    "recusado"
+])
+
 
 export default class ErroValidacao extends Error {
     constructor(message) {
@@ -75,37 +88,23 @@ export function validarCanal(canal) {
 }
 
 
-export function validarEstado(estado) {
+export function validarSet(dado, array, mensagemErro) {
 
-    if(!estado || estado.trim() === '') {
-        throw new ErroValidacao("Nome do estado é obrigatório.")
+    if(!dado || dado.trim() === '') {
+        throw new ErroValidacao(mensagemErro)
     }
 
-    estado = validarEntradaTexto(estado, "Informar o Estado é obrigatório")
+    dado = validarEntradaTexto(dado, mensagemErro)
 
-    const estadoFormatado = estado.trim().toLowerCase()
-        
-    if(!estadosDisponveis.has(estadoFormatado)) {
-        throw new ErroValidacao("Estado inválido.")
-    }  
-        
-    return estadoFormatado.toUpperCase()
+    const dadoFormatado = dado.trim().toLowerCase()
+
+    if(!array.has(dadoFormatado)) {
+        throw new ErroValidacao(mensagemErro)
+    }
+
+    return dadoFormatado.toUpperCase()
 }
 
-export function validarRole(role) {
-
-    if(!role || role.trim() === '') {
-        throw new ErroValidacao("Definir a Role é obrigatório") 
-    }
-
-    const roleFormatada = role.trim().toLowerCase()
-
-    if(!rolesDisponivels.has(roleFormatada)) {
-        throw new ErroValidacao("Role inválida")
-    }
-
-    return roleFormatada.toUpperCase()
-}
 
 export function validarEntradaTexto(entrada, mensagem_erro) {
     if(!entrada || entrada.trim() === '') {
@@ -150,3 +149,41 @@ export function formatarData(data) {
 
     return `${dia}/${mes}/${ano}`
 }
+
+
+export function validarConsentimento(consentimento) {
+    if(typeof consentimento !== 'boolean') {
+        throw new ErroValidacao("Consentimento informado é inválido (Envie true ou false).")
+    }
+
+    return consentimento
+}
+
+export function verificarVersaoTermo(versao) {
+
+    const versaoTermoAtual = "1.0"
+
+    if(versao !== versaoTermoAtual) {
+        throw new ErroValidacao("Essa versão dos termos está inválida.")
+    }
+
+    return versaoTermoAtual
+}
+
+export function validarMetodoPagamento(tipo_pagamento) {
+
+    if(!tipo_pagamento || tipo_pagamento.trim() === '') {
+        throw new ErroValidacao("Método de pagamento é obrigatório.")
+    }
+
+    tipo_pagamento = validarEntradaTexto(tipo_pagamento, "Informar o método de pagamento é obrigatório")
+
+    const metodo_pagamentoFormatado = tipo_pagamento.trim().toLowerCase()
+
+    if(!pagamentosDisponiveis.has(metodo_pagamentoFormatado)) {
+        throw new ErroValidacao("Método de Pagamento inválido")
+    }
+
+    return metodo_pagamentoFormatado.toUpperCase()
+}
+

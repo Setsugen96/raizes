@@ -68,7 +68,7 @@ class LojaModel {
     }
 
     async delete(id) {
-        const sql = 'DELETE FROM loja WHERE id=?'
+        const sql = 'DELETE FROM loja WHERE id = ?'
         const [result] = await connection.execute(sql, [id])
         return result
     }

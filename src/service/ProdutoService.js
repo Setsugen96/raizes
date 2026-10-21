@@ -1,6 +1,6 @@
 import ProdutoModel from "../model/produtoModel.js";
 
-import ErroValidacao, {validarEstado, validarEntradaTexto} from "./untils.js";
+import ErroValidacao, {validarEntradaTexto, estadosDisponveis, validarSet} from "./untils.js";
 
 class ProdutoService {
 
@@ -27,7 +27,7 @@ class ProdutoService {
     async cadastrar(produto) {
             produto.nome = validarEntradaTexto(produto.nome, "Nome do produto é obrigatório")
             produto.preco = this.validarPrecoProduto(produto.preco)
-            produto.estado = validarEstado(produto.estado)
+            produto.estado = validarSet(produto.estado, estadosDisponveis, "Estado inválido")
             produto.receita = validarEntradaTexto(produto.receita, "Descrição da receita é obrigatório")
             return await ProdutoModel.create(produto)
     }
@@ -40,7 +40,7 @@ class ProdutoService {
     async listar(page, limit, estado) {
 
          if(estado) {
-            estado = validarEstado(estado)
+            estado = validarSet(estado, estadosDisponveis, "Estado inválido")
         }
         
         return await ProdutoModel.findAll(page, limit, estado )
@@ -61,7 +61,7 @@ class ProdutoService {
         }
 
         if(novosDados_produto.estado !== undefined) {
-            novosDados_produto.estado = validarEstado(novosDados_produto.estado)
+            novosDados_produto.estado = validarSet(novosDados_produto.estado, estadosDisponveis, "Estado inválido")
         }
 
         if(novosDados_produto.receita !== undefined) {

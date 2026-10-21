@@ -1,8 +1,8 @@
 import CardapioModel from "../model/cardapioModel.js"
-import LojaModel from "../model/lojaModel.js"
 import PedidoModel from "../model/pedidoModel.js"
 import UsuarioModel from "../model/usuarioModel.js"
-import ErroValidacao, { validarRole } from "../service/untils.js"
+import { rolesDisponivels, validarSet } from "../service/untils.js"
+
 
 class AuthorizationMiddleware {
 
@@ -30,13 +30,13 @@ class AuthorizationMiddleware {
                 return next()
             }
 
-            const roleBody = validarRole(req.body.role)
+            const roleBody = validarSet(req.body.role, rolesDisponivels, "Role inválida")
             if(req.usuario.role === 'GERENTE' && roleBody === 'ATENDENTE') {
                if(req.usuario.loja_id !== req.body.loja_id) {
                     return res.status(403).json({
                         message: "O gerente pode apenas registrar funcionários da sua Loja de atuação."
                     })
-               }
+                }
             }
 
             next()
@@ -177,9 +177,9 @@ class AuthorizationMiddleware {
                 if(pedido && Number(pedido.cliente_id) !== Number(req.usuario.id)) {
                     return res.status(403).json({
                         message: "Esse pedido não pertence a esse usuário."
-                        })
-                    }            
-                }
+                    })
+                }            
+            }
             
             if(req.usuario.role === 'GERENTE' || req.usuario.role === 'ATENDENTE') {
 
@@ -188,9 +188,9 @@ class AuthorizationMiddleware {
                 if(pedido && Number(pedido.loja_id) !== Number(req.usuario.loja_id)) {
                     return res.status(403).json({
                         message: "Funcionário só pode gerenciar pedidos da sua loja de atuação."
-                        })
-                    }
+                    })
                 }
+            }
 
             next()
         }
@@ -232,6 +232,24 @@ class AuthorizationMiddleware {
                         message: "Este usuário só pode gerenciar dados das suas próprias lojas."
                     }) 
                 }
+            }
+
+            next()
+        }
+    }
+
+    autorizarGetFidelidade() {
+
+        return async (req, res, next) => {
+
+            if(req.usuario.role === 'ADMINISTRADOR') {
+                return next()
+            }
+
+            if(Number(req.usuario.id) !== Number(req.params.id)) {
+                return res.status(403).json({
+                    message: "Cliente só pode consultar o seu próprio status de consentimento LGPD"
+                })
             }
 
             next()

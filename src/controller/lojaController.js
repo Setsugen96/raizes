@@ -104,7 +104,7 @@ class LojaController {
                 message: "Loja não encontrada"
             })
             
-        } catch(error) {
+        } catch (error) {
 
             if(error.code === "ER_DUP_ENTRY") {
                 return res.status(409).json({

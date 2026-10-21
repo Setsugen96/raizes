@@ -1,12 +1,12 @@
 import LojaModel from "../model/lojaModel.js"
 
-import ErroValidacao, {validarEstado, validarEntradaTexto} from "./untils.js";
+import ErroValidacao, {validarEntradaTexto, validarSet, estadosDisponveis} from "./untils.js";
 
 class LojaService {
 
     async cadastrar(loja) {
         loja.nome = validarEntradaTexto(loja.nome, "Nome da loja é obrigatório")
-        loja.estado = validarEstado(loja.estado)
+        loja.estado = validarSet(loja.estado, estadosDisponveis, "Estado inválido")
         return await LojaModel.create(loja)
     }
 
@@ -18,7 +18,7 @@ class LojaService {
     async listar(page, limit, estado) {
 
         if(estado) {
-            estado = validarEstado(estado)
+            estado = validarSet(estado, estadosDisponveis, "Estado inválido")
         }
         
         return await LojaModel.findAll(page, limit, estado)
@@ -35,7 +35,7 @@ class LojaService {
         }
 
         if(novosDados_loja.estado !== undefined) {
-            novosDados_loja.estado = validarEstado(novosDados_loja.estado)
+            novosDados_loja.estado = validarSet(novosDados_loja.estado, estadosDisponveis, "Estado inválido")
         }
    
         const result = await LojaModel.update(id, novosDados_loja)

@@ -1,6 +1,7 @@
+import FidelidadeModel from "../model/fidelidadeModel.js";
 import LojaModel from "../model/lojaModel.js";
 import UsuarioModel from "../model/usuarioModel.js";
-import ErroValidacao, {validarId, validarEntradaTexto, validarRole} from "./untils.js";
+import ErroValidacao, {validarId, validarEntradaTexto, validarSet, rolesDisponivels} from "./untils.js";
 import bcrypt from 'bcrypt'
 
 class UsuarioService {
@@ -15,7 +16,7 @@ class UsuarioService {
         usuario.email = validarEntradaTexto(usuario.email, "Email é obrigatório")
         usuario.senha = validarEntradaTexto(usuario.senha, "Senha é obrigatório")
         usuario.senha = await this.hashSenha(usuario.senha)
-        usuario.role = validarRole(usuario.role)
+        usuario.role = validarSet(usuario.role, rolesDisponivels, "Role inválida" )
     
 
         if(usuario.role === 'GERENTE') {
@@ -26,6 +27,7 @@ class UsuarioService {
                 throw new ErroValidacao("Essa loja já possui um gerente")
             }
         }
+
         if(usuario.role === "GERENTE" || usuario.role === "ATENDENTE" ) {
 
              if(usuario.loja_id === undefined) {
@@ -47,8 +49,15 @@ class UsuarioService {
                 throw new ErroValidacao("Apenas Gerentes e Atendentes podem ser associados a lojas.")
             }
         }
+
+        const novo_usuario = await UsuarioModel.create(usuario)
         
-        return await UsuarioModel.create(usuario)
+        if(novo_usuario.role === 'CLIENTE') {
+
+            await FidelidadeModel.create({cliente_id: novo_usuario.id})
+        }
+
+        return novo_usuario
     }
 
     async buscarPorId(id) {
@@ -93,7 +102,18 @@ class UsuarioService {
         }
 
         if(usuario_atualizado.role !== undefined) {
-            usuario_atualizado.role = validarRole(usuario_atualizado.role)
+            usuario_atualizado.role = validarSet(usuario_atualizado.role, rolesDisponivels, "Role inválida" )
+
+            if(usuario_atualizado.role === 'GERENTE') {
+
+                const gerente = await UsuarioModel.findGerenteById(usuario.loja_id)
+
+                if(gerente) {
+                    
+                    throw new ErroValidacao("Essa loja já tem gerente ")
+                }
+            }
+        
         }
 
         if(usuario_atualizado.loja_id !== undefined) {
@@ -109,8 +129,6 @@ class UsuarioService {
         if((usuario_atualizado.role ?? usuario.role) === 'CLIENTE' && usuario_atualizado.loja_id !== undefined) {
             throw new ErroValidacao("Cliente não pode ser vinculado a uma loja")
         }
-
-       
 
         return await UsuarioModel.update(id, usuario_atualizado)
     }
