@@ -8,8 +8,7 @@ import { rolesDisponivels, validarSet } from "../service/untils.js"
 class AuthorizationMiddleware {
 
     autorizarRoles(...rolesPermitidas) {
-
-
+        
         return(req, res, next) => {
 
             if(!rolesPermitidas.includes(req.usuario.role)) {
