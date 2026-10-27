@@ -6,6 +6,8 @@ import UsuarioRota from './route/usuarioRoute.js'
 import AuthRota from './route/authRoute.js'
 import PedidoRota from './route/pedidoRoute.js'
 import FidelidadeRota from './route/fidelidadeRoute.js'
+import PagamentoMock from './route/pagamentoRoute.js'
+
 const app = express()
 
 app.use(express.json())
@@ -17,4 +19,6 @@ app.use(UsuarioRota)
 app.use(AuthRota)
 app.use(PedidoRota)
 app.use(FidelidadeRota)
+app.use(PagamentoMock)
+
 export default app 

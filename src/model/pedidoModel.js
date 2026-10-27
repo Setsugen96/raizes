@@ -48,8 +48,8 @@ async findById(id) {
     `
     const [result] = await connection.execute(sql, [id]);
 
-    return result[0];
-}
+    return result[0]
+}   
 
 
     async findPedidoStatus(cliente_id) {

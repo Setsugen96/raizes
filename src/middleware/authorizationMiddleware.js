@@ -1,4 +1,5 @@
 import CardapioModel from "../model/cardapioModel.js"
+import PagamentoModel from "../model/pagamentoModel.js"
 import PedidoModel from "../model/pedidoModel.js"
 import UsuarioModel from "../model/usuarioModel.js"
 import { rolesDisponivels, validarSet } from "../service/untils.js"
@@ -238,7 +239,7 @@ class AuthorizationMiddleware {
         }
     }
 
-    autorizarGetFidelidade() {
+    autorizarFidelidade() {
 
         return async (req, res, next) => {
 
@@ -248,11 +249,32 @@ class AuthorizationMiddleware {
 
             if(Number(req.usuario.id) !== Number(req.params.id)) {
                 return res.status(403).json({
-                    message: "Cliente só pode consultar o seu próprio status de consentimento LGPD"
+                    message: "Cliente só pode gerenciar e consultar o seu próprio status de consentimento LGPD"
                 })
             }
 
             next()
+        }
+    }
+
+    autorizarClientePagamento() {
+
+        return async (req, res, next) => {
+            
+            const pagamentoPedido = await PagamentoModel.findById(req.params.id)
+
+            if(pagamentoPedido) {
+
+                const pedido = await PedidoModel.findById(pagamentoPedido.pedido_id)
+
+                if(Number(req.usuario.id) !== Number(pedido.cliente_id)) {
+                    return res.status(403).json({
+                        message: "Cliente só pode pagar seu próprio pedido"
+                    })
+                }
+            }
+
+            next()          
         }
     }
 

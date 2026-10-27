@@ -6,7 +6,7 @@ import AuthorizationMiddleware from "../middleware/authorizationMiddleware.js";
 const UsuarioRota = Router()
 
 //POST
-UsuarioRota.post('/usuarios', UsuarioController.storeCliente)
+UsuarioRota.post('/usuarios/cliente', UsuarioController.storeCliente)
 UsuarioRota.post('/usuarios/funcionario', AuthMiddleware.autenticarToken , AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR','GERENTE') , AuthorizationMiddleware.autorizarCadastroUsuario(), UsuarioController.store)
 
 //GETS

@@ -1,5 +1,5 @@
 import FidelidadeModel from "../model/fidelidadeModel.js";
-import ErroValidacao, { validarConsentimento, validarEntradaTexto, verificarVersaoTermo } from "./untils.js";
+import ErroValidacao, { ErroNaoEncontrado, validarConsentimento, validarEntradaTexto, verificarVersaoTermo } from "./untils.js";
 
 
 
@@ -11,7 +11,7 @@ class FidelidadeService {
         const fidelidadeCliente = await FidelidadeModel.findByClienteId(cliente_id)
 
         if(!fidelidadeCliente) {
-            throw new ErroValidacao("Nenhum registro de fidelidade foi encontrado no nome desse usuário.")
+            throw new ErroNaoEncontrado("Nenhum registro de fidelidade foi encontrado no nome desse usuário.")
         }
 
         if(consentimento.consentimento_lgpd === undefined) {
@@ -30,12 +30,18 @@ class FidelidadeService {
             consentimento.data_consentimento = null
         }
 
-        return await FidelidadeModel.update(cliente_id, consentimento)
+        return FidelidadeModel.update(cliente_id, consentimento)
     }
 
     async buscarIdCliente(id) {
 
-        return await FidelidadeModel.findByClienteId(id)
+        const fidelidade = FidelidadeModel.findByClienteId(id)
+
+        if(!fidelidade) {
+            throw new ErroNaoEncontrado("Consentimento desse cliente não foi encontrado nos registros.")
+        }
+
+        return FidelidadeModel.findByClienteId(id)
     }
 }
 

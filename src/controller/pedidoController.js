@@ -23,6 +23,18 @@ class PedidoController {
                 })
             }
 
+            if(error.name === "ErroNaoEncontrado") {
+                return res.status(404).json({
+                    message: error.message
+                })
+            }
+
+            if(error.name === "ErroConflito") {
+                return res.status(409).json({
+                    message: error.message
+                })
+            }
+
             return res.status(500).json({
                 message: error.message
             })
@@ -36,19 +48,19 @@ class PedidoController {
             const id = req.params.id
             const pedidoEncontrado = await PedidoService.buscarPorId(id)
             
-            if(pedidoEncontrado) {
+            return res.status(200).json({
+                message: "Pedido encontrado com sucesso",
+                pedido: pedidoEncontrado
+            })
 
-                return res.status(200).json({
-                    message: "Pedido encontrado com sucesso",
-                    pedido: pedidoEncontrado
+        } catch (error) {
+            
+            if(error.name === "ErroNaoEncontrado") {
+                return res.status(404).json({
+                    message: error.message
                 })
             }
 
-            return res.status(404).json({
-                message: "Pedido não encontrado."
-            })
-        } catch (error) {
-            
             return res.status(500).json({
                 message: error.message
             })
@@ -91,20 +103,25 @@ class PedidoController {
             const novosDados = req.body 
 
             const pedidoAtualizado = await PedidoService.alterar(id, novosDados)
-
-            if(!pedidoAtualizado) {
-                return res.status(404).json({
-                    message: "Pedido não encontrado"
-                })
-            }
-
-            if(pedidoAtualizado.affectedRows > 0) {
-                return res.status(200).json({
-                    message: "Cardápio alterado com sucesso"
-                })
-            }
+            
+            return res.status(200).json({
+                message: "Pedido alterado com sucesso",
+                pedidoAtualizado: pedidoAtualizado
+            })
 
         } catch (error) {
+
+            if(error.name === "ErroNaoEncontrado") {
+                return res.status(404).json({
+                    message: error.message
+                })
+            }
+
+            if(error.name === "ErroConflito") {
+                return res.status(409).json({
+                    message: error.message
+                })
+            }
 
             if(error.name == "ErroValidacao") {
                 return res.status(400).json({
@@ -121,25 +138,24 @@ class PedidoController {
 
     async delete(req, res) {
             
-            try {
+        try {
     
-                const id = req.params.id
-                const pedidoDeletado = await PedidoService.deletar(id)
+            const id = req.params.id
+            const pedidoDeletado = await PedidoService.deletar(id)
             
-                if(pedidoDeletado.affectedRows > 0) {
-    
-                    return res.status(200).json({
-                    message: "Pedido deletado com sucesso",
-                    pedido: pedidoDeletado
-                    })
-                } 
-    
-                return res.status(404).json({
-                    message: "Pedido não foi encontrado para deletar."
-                })
-                
+            return res.status(200).json({
+                message: "Pedido deletado com sucesso",
+                pedido: pedidoDeletado
+            })
                 
             } catch (error) {
+
+                if(error.name === "ErroNaoEncontrado") {
+                    return res.status(404).json({
+                        message: error.message
+                    })
+                }
+
                 return res.status(500).json({
                     message: error.message
                 })

@@ -53,7 +53,19 @@ export default class ErroValidacao extends Error {
     }
 }
 
+export class ErroNaoEncontrado extends Error {
+    constructor(message) {
+        super(message)
+        this.name = "ErroNaoEncontrado"
+    }
+}
 
+export class ErroConflito extends Error {
+    constructor(message) {
+        super(message)
+        this.name = "ErroConflito"
+    }
+}
 
 export function validarStatus(status) {
 

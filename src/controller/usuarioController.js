@@ -73,28 +73,29 @@ class UsuarioController {
 
     async show(req, res) {
             
-            try {
+        try {
     
-                const id = req.params.id
-                const usuarioEncontrado = await UsuarioService.buscarPorId(id)      
-                if(usuarioEncontrado) {
-    
-                    return res.status(200).json({
-                    message: "Usuário encontrado com sucesso",
-                    usuario: usuarioEncontrado
-                    })
-                } 
-    
+            const id = req.params.id
+            const usuarioEncontrado = await UsuarioService.buscarPorId(id)      
+            
+            return res.status(200).json({
+                message: "Usuário encontrado com sucesso",
+                usuario: usuarioEncontrado
+            })
+                    
+        } catch (error) {
+
+            if(error.name === "ErroNaoEncontrado") {
                 return res.status(404).json({
-                        message: "Usuário não encontrado."
-                    })      
-                
-            } catch (error) {
-                return res.status(500).json({
                     message: error.message
                 })
-            }            
-        }  
+            }
+
+            return res.status(500).json({
+                message: error.message
+            })
+        }            
+    }  
     
     async index(req, res) {
 
@@ -129,24 +130,23 @@ class UsuarioController {
             const novosDados = req.body 
 
             const usuarioAtualizado = await UsuarioService.alterar(id, novosDados)
-
-            if(!usuarioAtualizado) {
-                return res.status(404).json({
-                    message: "Usuário não encontrado"
-                })
-            }
-
-            if(usuarioAtualizado.affectedRows > 0) {
-                return res.status(200).json({
-                    message: "Usuário alterado com sucesso"
-                })
-            }
-
+          
+            return res.status(200).json({
+                message: "Usuário alterado com sucesso",
+                usuarioAtualizado: usuarioAtualizado
+            })
+            
         } catch(error) {
 
             if(error.code === "ER_DUP_ENTRY") {
                 return res.status(409).json({
                     message: "Email já registrado."
+                })
+            }
+
+            if(error.name === "ErroNaoEncontrado") {
+                return res.status(404).json({
+                    message: error.message
                 })
             }
 
@@ -159,7 +159,6 @@ class UsuarioController {
             return res.status(500).json({
                 message: error.message
             })
-
         }
     }
 
@@ -169,22 +168,23 @@ class UsuarioController {
 
             const id = req.params.id
             const usuarioDeletado = await UsuarioService.deletar(id)
+  
+            return res.status(200).json({
+                message: "Usuario deletado com sucesso",
+                usuario: usuarioDeletado
+            })
 
-            if(usuarioDeletado.affectedRows > 0) {
-                return res.status(200).json({
-                    message: "Usuario deletado com sucesso",
-                    usuario: usuarioDeletado
+        } catch (error) {
+
+            if(error.name === "ErroNaoEncontrado") {
+                return res.status(404).json({
+                    message: error.message
                 })
             }
 
-            return res.status(404).json({
-                message: "Usuario não foi encontrado"
+            return res.status(500).json({
+                message: error.message
             })
-
-            } catch (error) {
-                return res.status(500).json({
-                    message: error.message
-                })
         }
     }
 }

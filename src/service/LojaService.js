@@ -1,18 +1,25 @@
 import LojaModel from "../model/lojaModel.js"
 
-import ErroValidacao, {validarEntradaTexto, validarSet, estadosDisponveis} from "./untils.js";
+import ErroValidacao, {validarEntradaTexto, validarSet, estadosDisponveis, ErroNaoEncontrado} from "./untils.js";
 
 class LojaService {
 
     async cadastrar(loja) {
         loja.nome = validarEntradaTexto(loja.nome, "Nome da loja é obrigatório")
         loja.estado = validarSet(loja.estado, estadosDisponveis, "Estado inválido")
-        return await LojaModel.create(loja)
+        return LojaModel.create(loja)
     }
 
     async buscarPorId(id) {
 
-        return await LojaModel.findById(id)
+        const loja = await LojaModel.findById(id)
+
+        if(!loja) {
+
+            throw new ErroNaoEncontrado("Loja não encontrada")
+        }
+
+        return loja
     }
 
     async listar(page, limit, estado) {
@@ -21,10 +28,17 @@ class LojaService {
             estado = validarSet(estado, estadosDisponveis, "Estado inválido")
         }
         
-        return await LojaModel.findAll(page, limit, estado)
+        return LojaModel.findAll(page, limit, estado)
     }
 
     async alterar(id, novosDados_loja) {
+
+        const loja = await LojaModel.findById(id)
+
+        if(!loja) {
+
+            throw new ErroNaoEncontrado("Loja não encontrada")
+        }
 
         if (novosDados_loja.nome === undefined && novosDados_loja.estado === undefined) {
             throw new ErroValidacao("Nenhum dado foi informado para atualização.")
@@ -38,14 +52,19 @@ class LojaService {
             novosDados_loja.estado = validarSet(novosDados_loja.estado, estadosDisponveis, "Estado inválido")
         }
    
-        const result = await LojaModel.update(id, novosDados_loja)
-
-        return result 
+        return LojaModel.update(id, novosDados_loja)
     }
 
     async deletar(id) {
 
-        return await LojaModel.delete(id)
+        const loja = await LojaModel.findById(id) 
+
+        if(!loja) {
+
+            throw new ErroNaoEncontrado("Loja não encontrada")
+        }
+
+        return LojaModel.delete(id)
     }
 
 

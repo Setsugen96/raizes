@@ -42,19 +42,20 @@ class LojaController {
 
             const id = req.params.id
             const lojaEncontrada = await LojaService.buscarPorId(id)      
-            if(lojaEncontrada) {
-
-                return res.status(200).json({
+         
+            return res.status(200).json({
                 message: "Loja Encontrada com sucesso",
-                loja: lojaEncontrada
+                    loja: lojaEncontrada
                 })
-            } 
 
-            return res.status(404).json({
-                    message: "Loja não encontrada."
-                })      
-            
         } catch (error) {
+
+            if(error.name === "ErroNaoEncontrado") {
+                return res.status(404).json({
+                    message: error.message
+                })
+            }
+
             return res.status(500).json({
                 message: error.message
             })
@@ -93,15 +94,10 @@ class LojaController {
             const novosDados = req.body
 
             const lojaAtualizada = await LojaService.alterar(id, novosDados)
-
-            if(lojaAtualizada.affectedRows > 0) {
-                return res.status(200).json({
-                    message: "Loja atualizada com sucesso."
-                })
-            } 
-
-            return res.status(404).json({
-                message: "Loja não encontrada"
+  
+            return res.status(200).json({
+                message: "Loja atualizada com sucesso.",
+                lojaAtualizada: lojaAtualizada
             })
             
         } catch (error) {
@@ -114,6 +110,12 @@ class LojaController {
 
             if(error.name === "ErroValidacao") {
                 return res.status(400).json({
+                    message: error.message
+                })
+            }
+
+            if(error.name === "ErroNaoEncontrado") {
+                return res.status(404).json({
                     message: error.message
                 })
             }
@@ -131,20 +133,19 @@ class LojaController {
             const id = req.params.id
             const lojaDeletada = await LojaService.deletar(id)
         
-            if(lojaDeletada.affectedRows > 0) {
-
-                return res.status(200).json({
+            return res.status(200).json({
                 message: "Loja deletada com sucesso",
                 loja: lojaDeletada
-                })
-            } 
-
-            return res.status(404).json({
-                message: "Loja para deletar não encontrada."
             })
             
-            
         } catch (error) {
+
+            if(error.name === "ErroNaoEncontrado") {
+                return res.status(404).json({
+                    message: error.message
+                })
+            }
+
             return res.status(500).json({
                 message: error.message
             })

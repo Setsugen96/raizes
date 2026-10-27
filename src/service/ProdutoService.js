@@ -1,6 +1,6 @@
 import ProdutoModel from "../model/produtoModel.js";
 
-import ErroValidacao, {validarEntradaTexto, estadosDisponveis, validarSet} from "./untils.js";
+import ErroValidacao, {validarEntradaTexto, estadosDisponveis, validarSet, ErroNaoEncontrado} from "./untils.js";
 
 class ProdutoService {
 
@@ -23,18 +23,23 @@ class ProdutoService {
         return preco 
     }
 
-
     async cadastrar(produto) {
             produto.nome = validarEntradaTexto(produto.nome, "Nome do produto é obrigatório")
             produto.preco = this.validarPrecoProduto(produto.preco)
             produto.estado = validarSet(produto.estado, estadosDisponveis, "Estado inválido")
             produto.receita = validarEntradaTexto(produto.receita, "Descrição da receita é obrigatório")
-            return await ProdutoModel.create(produto)
+            return ProdutoModel.create(produto)
     }
 
     async buscarPorId(id) {
 
-        return await ProdutoModel.findById(id)
+        const produto = await ProdutoModel.findById(id) 
+
+        if(!produto) {
+            throw new ErroNaoEncontrado("Produto não encontrado")
+        }
+
+        return produto
     }
 
     async listar(page, limit, estado) {
@@ -43,10 +48,16 @@ class ProdutoService {
             estado = validarSet(estado, estadosDisponveis, "Estado inválido")
         }
         
-        return await ProdutoModel.findAll(page, limit, estado )
+        return ProdutoModel.findAll(page, limit, estado )
     }
 
     async alterar(id, novosDados_produto) {
+
+        const produto = await ProdutoModel.findById(id) 
+
+        if(!produto) {
+            throw new ErroNaoEncontrado("Produto para alterar não encontrado")
+        }
 
         if (novosDados_produto.nome === undefined && novosDados_produto.preco === undefined && novosDados_produto.estado === undefined && novosDados_produto.receita === undefined) {
             throw new ErroValidacao("Nenhum dado foi informado para atualização.")
@@ -68,15 +79,18 @@ class ProdutoService {
             novosDados_produto.receita = validarEntradaTexto(novosDados_produto.receita, "Descrição da receita é obrigatória")
         }
 
-        const result = await ProdutoModel.update(id, novosDados_produto)
-
-        return result
-        
+        return ProdutoModel.update(id, novosDados_produto)     
     }
 
     async deletar(id) {
 
-        return await ProdutoModel.delete(id)
+        const produto = await ProdutoModel.findById(id)
+
+        if(!produto) {
+            throw new ErroNaoEncontrado("Produto para deletar não foi encontrado.")
+        }
+
+        return ProdutoModel.delete(id)
     }
 
 }

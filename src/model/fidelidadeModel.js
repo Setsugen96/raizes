@@ -18,6 +18,7 @@ class FidelidadeModel {
     async update(cliente_id, consentimento) {
 
         const sql = 'UPDATE fidelidade SET consentimento_lgpd = ?, versao_termo = ?, data_consentimento = ? WHERE cliente_id = ?'
+        
         const [result] = await connection.execute(sql, [
             consentimento.consentimento_lgpd, 
             consentimento.versao_termo, 
@@ -26,7 +27,13 @@ class FidelidadeModel {
         ])
 
         return result 
+    }
 
+    async updatePontos(id, novosPontos, conexao = connection) {
+
+        const sql = 'UPDATE fidelidade SET pontos = ? WHERE id = ?'
+
+        await conexao.execute(sql, [novosPontos, id])
     }
 }
 

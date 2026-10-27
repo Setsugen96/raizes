@@ -42,22 +42,24 @@ class ProdutoController {
 
             const id = req.params.id
             const produtoEncontrado = await ProdutoService.buscarPorId(id)
-            
-            if(produtoEncontrado) {
-                return res.status(200).json({
+                   
+            return res.status(200).json({
                 message: "Produto encontrado com sucesso",
-                produto: produtoEncontrado
-                })
-            } 
-            return res.status(404).json({
-                    message: "Produto não encontrado."
-                })      
+                    produto: produtoEncontrado
+                })    
                 
-            } catch (error) {
-                return res.status(500).json({
+        } catch (error) {
+
+            if(error.name === "ErroNaoEncontrado") {
+                return res.status(404).json({
                     message: error.message
                 })
-            }            
+            }
+
+            return res.status(500).json({
+                message: error.message
+            })
+        }            
     }
 
     async index(req , res) {
@@ -93,62 +95,62 @@ class ProdutoController {
             const novosDados = req.body
     
             const produtoAtualizado = await ProdutoService.alterar(id, novosDados)
-    
-            if(produtoAtualizado.affectedRows > 0) {
-                return res.status(200).json({
-                    message: "Produto alterado com sucesso."
-                })
-            } 
-    
-            return res.status(404).json({
-                message: "Produto não encontrado"
+       
+            return res.status(200).json({
+                message: "Produto alterado com sucesso.",
+                produtoAtualizado: produtoAtualizado
             })
-                
-            } catch(error) {
+            
+        } catch(error) {
     
-                if(error.code === "ER_DUP_ENTRY") {
-                    return res.status(409).json({
-                        message: "Produto com esse nome já existe."
-                    })
-                }
-    
-                if(error.name == "ErroValidacao") {
-                    return res.status(400).json({
-                        message: error.message
-                    })
-                }
-    
-                return res.status(500).json({
-                    message: error.message
-                })          
-            }        
-        }
-
-        async delete(req, res) {
-                
-            try {
-        
-                const id = req.params.id
-                const produtoDeletado = await ProdutoService.deletar(id)
-                
-                if(produtoDeletado.affectedRows > 0) {
-                    return res.status(200).json({
-                    message: "Produto deletado com sucesso",
-                    produto: produtoDeletado
-                    })
-                } 
-        
-                return res.status(404).json({
-                    message: "Produto para deletar não foi encontrado."
+            if(error.code === "ER_DUP_ENTRY") {
+                return res.status(409).json({
+                    message: "Produto com esse nome já existe."
                 })
-                    
-                    
-                } catch (error) {
-                    return res.status(500).json({
-                        message: error.message
-                    })
-                }            
             }
+
+            if(error.name === "ErroNaoEncontrado") {
+                return res.status(404).json({
+                    message: error.message
+                })
+            }
+    
+            if(error.name == "ErroValidacao") {
+                return res.status(400).json({
+                    message: error.message
+                })
+            }
+    
+            return res.status(500).json({
+                message: error.message
+            })          
+        }        
+    }
+
+    async delete(req, res) {
+                
+        try {
+        
+            const id = req.params.id
+            const produtoDeletado = await ProdutoService.deletar(id)
+                           
+            return res.status(200).json({
+                message: "Produto deletado com sucesso",
+                    produto: produtoDeletado
+                })                   
+                    
+        } catch (error) {
+
+            if(error.name === "ErroNaoEncontrado") {
+                return res.status(404).json({
+                    message: error.message
+            })
+        }
+            return res.status(500).json({
+                    message: error.message
+            })
+        }            
+    }
 
 
 

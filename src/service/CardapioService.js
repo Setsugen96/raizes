@@ -1,7 +1,7 @@
 import CardapioModel from "../model/cardapioModel.js"
 import LojaModel from "../model/lojaModel.js"
 import ProdutoModel from "../model/produtoModel.js"
-import ErroValidacao, { formatarData, validarDatas, validarId } from "./untils.js"
+import ErroValidacao, { ErroNaoEncontrado, formatarData, validarDatas, validarId } from "./untils.js"
 
 
 
@@ -50,7 +50,7 @@ class CardapioService {
              novo_cardapio.data_fim = datas[1]
         }
        
-        return await CardapioModel.create(novo_cardapio)
+        return CardapioModel.create(novo_cardapio)
     }
 
     async buscarPorId(id) {
@@ -59,7 +59,7 @@ class CardapioService {
         const dataAtual = new Date()
 
         if(!cardapio) {
-            return null 
+            throw new ErroNaoEncontrado("Cardápio não foi encontrado.")
         }
 
         cardapio.disponibilidade = this.verificarDisponibilidadeProduto(cardapio.data_inicio, cardapio.data_fim, dataAtual)
@@ -87,16 +87,13 @@ class CardapioService {
                 if(cardapio.data_inicio || cardapio.data_fim) {
                     cardapio.data_inicio = formatarData(cardapio.data_inicio)
                     cardapio.data_fim = formatarData(cardapio.data_fim)
-                }
-                       
+                }                       
             }
 
-            return cardapios      
-         
+            return cardapios             
         }
 
-        return await CardapioModel.findAll(page, limit, loja_id)
-       
+        return CardapioModel.findAll(page, limit, loja_id)     
     }
 
     async alterar(id, cardapio_atualizado) {
@@ -104,7 +101,7 @@ class CardapioService {
         const cardapioExistente = await CardapioModel.findById(id)
         
         if(!cardapioExistente) {
-            return null 
+            throw new ErroNaoEncontrado("Cardápio para atualizar não foi encontrado.")
         }
 
         if(
@@ -178,13 +175,18 @@ class CardapioService {
     
         }
         
-        return await CardapioModel.update(id, cardapio_atualizado)
+        return CardapioModel.update(id, cardapio_atualizado)
     }
 
     async deletar(id) {
 
+        const cardapio = await CardapioModel.findById(id)
+
+        if(!cardapio) {
+            throw new ErroNaoEncontrado("Cardápio para deletar não foi encontrado")
+        }
         
-        return await CardapioModel.delete(id)
+        return CardapioModel.delete(id)
     }
 
 }

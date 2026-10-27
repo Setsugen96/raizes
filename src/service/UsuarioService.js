@@ -1,7 +1,7 @@
 import FidelidadeModel from "../model/fidelidadeModel.js";
 import LojaModel from "../model/lojaModel.js";
 import UsuarioModel from "../model/usuarioModel.js";
-import ErroValidacao, {validarId, validarEntradaTexto, validarSet, rolesDisponivels} from "./untils.js";
+import ErroValidacao, {validarId, validarEntradaTexto, validarSet, rolesDisponivels, ErroNaoEncontrado} from "./untils.js";
 import bcrypt from 'bcrypt'
 
 class UsuarioService {
@@ -62,12 +62,18 @@ class UsuarioService {
 
     async buscarPorId(id) {
 
-        return await UsuarioModel.findById(id)
+        const usuario = await UsuarioModel.findById(id) 
+
+        if(!usuario) { 
+            throw new ErroNaoEncontrado("Usuário não encontrado")
+        }
+
+        return usuario
     }
 
     async listar(page, limit, role, loja_id) {
 
-        return await UsuarioModel.findAll(page, limit, role, loja_id)
+        return UsuarioModel.findAll(page, limit, role, loja_id)
     }
 
     async alterar(id, usuario_atualizado) {
@@ -75,7 +81,7 @@ class UsuarioService {
         const usuario = await UsuarioModel.findById(id)
 
         if(!usuario) {
-            return null 
+            throw new ErroNaoEncontrado("Usuário para alterar não encontrado.")
         }
 
         if(
@@ -112,8 +118,7 @@ class UsuarioService {
                     
                     throw new ErroValidacao("Essa loja já tem gerente ")
                 }
-            }
-        
+            }      
         }
 
         if(usuario_atualizado.loja_id !== undefined) {
@@ -130,14 +135,19 @@ class UsuarioService {
             throw new ErroValidacao("Cliente não pode ser vinculado a uma loja")
         }
 
-        return await UsuarioModel.update(id, usuario_atualizado)
+        return UsuarioModel.update(id, usuario_atualizado)
     }
 
     async deletar(id) {
-        
-        return await UsuarioModel.delete(id)
-    }
 
+        const usuario = await UsuarioModel.findById(id)
+
+        if(!usuario) {
+            throw new ErroNaoEncontrado("Usuário para deletar não encontrado")
+        }
+        
+        return UsuarioModel.delete(id)
+    }
 }
 
 export default new UsuarioService()

@@ -260,4 +260,5 @@ async function executarTodasAsSeeds() {
     await semearBancoCardapio()
 }
 
-semearBancoCardapio()
+
+executarTodasAsSeeds()
