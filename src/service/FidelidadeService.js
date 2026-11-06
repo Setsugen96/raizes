@@ -1,12 +1,11 @@
 import FidelidadeModel from "../model/fidelidadeModel.js";
-import ErroValidacao, { ErroNaoEncontrado, validarConsentimento, validarEntradaTexto, verificarVersaoTermo } from "./untils.js";
-
-
-
+import ErroValidacao, { ErroNaoEncontrado, validarConsentimento, validarId, verificarVersaoTermo } from "./utils.js";
 
 class FidelidadeService {
 
     async alterar(cliente_id, consentimento) {
+
+        cliente_id = validarId(cliente_id)
 
         const fidelidadeCliente = await FidelidadeModel.findByClienteId(cliente_id)
 
@@ -35,7 +34,9 @@ class FidelidadeService {
 
     async buscarIdCliente(id) {
 
-        const fidelidade = FidelidadeModel.findByClienteId(id)
+        id = validarId(id)
+
+        const fidelidade = await FidelidadeModel.findByClienteId(id)
 
         if(!fidelidade) {
             throw new ErroNaoEncontrado("Consentimento desse cliente não foi encontrado nos registros.")

@@ -7,10 +7,13 @@ import AuthRota from './route/authRoute.js'
 import PedidoRota from './route/pedidoRoute.js'
 import FidelidadeRota from './route/fidelidadeRoute.js'
 import PagamentoMock from './route/pagamentoRoute.js'
+import swaggerSpec from './swagger.js'
+import swaggerUi from 'swagger-ui-express'
 
 const app = express()
 
 app.use(express.json())
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 app.use(LojaRota)
 app.use(ProdutoRota)

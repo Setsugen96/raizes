@@ -1,7 +1,7 @@
 import FidelidadeModel from "../model/fidelidadeModel.js";
 import LojaModel from "../model/lojaModel.js";
 import UsuarioModel from "../model/usuarioModel.js";
-import ErroValidacao, {validarId, validarEntradaTexto, validarSet, rolesDisponivels, ErroNaoEncontrado} from "./untils.js";
+import ErroValidacao, {validarId, validarEntradaTexto, validarSet, rolesDisponivels, ErroNaoEncontrado} from "./utils.js";
 import bcrypt from 'bcrypt'
 
 class UsuarioService {
@@ -62,6 +62,8 @@ class UsuarioService {
 
     async buscarPorId(id) {
 
+        id = validarId(id)
+
         const usuario = await UsuarioModel.findById(id) 
 
         if(!usuario) { 
@@ -73,10 +75,20 @@ class UsuarioService {
 
     async listar(page, limit, role, loja_id) {
 
+        if(page !== undefined && (!Number.isInteger(Number(page)) || Number(page) < 1)) {
+            throw new ErroValidacao("Page inválido")
+        }
+        
+        if(limit !== undefined && (!Number.isInteger(Number(limit)) || Number(limit) < 1)) {
+            throw new ErroValidacao("Limit inválido")
+        }
+
         return UsuarioModel.findAll(page, limit, role, loja_id)
     }
 
     async alterar(id, usuario_atualizado) {
+
+        id = validarId(id)
 
         const usuario = await UsuarioModel.findById(id)
 
@@ -140,6 +152,8 @@ class UsuarioService {
 
     async deletar(id) {
 
+        id = validarId(id)
+        
         const usuario = await UsuarioModel.findById(id)
 
         if(!usuario) {

@@ -1,6 +1,6 @@
 import ProdutoModel from "../model/produtoModel.js";
 
-import ErroValidacao, {validarEntradaTexto, estadosDisponveis, validarSet, ErroNaoEncontrado} from "./untils.js";
+import ErroValidacao, {validarEntradaTexto, estadosDisponveis, validarSet, ErroNaoEncontrado, validarId} from "./utils.js";
 
 class ProdutoService {
 
@@ -33,6 +33,8 @@ class ProdutoService {
 
     async buscarPorId(id) {
 
+        id = validarId(id)
+
         const produto = await ProdutoModel.findById(id) 
 
         if(!produto) {
@@ -44,6 +46,14 @@ class ProdutoService {
 
     async listar(page, limit, estado) {
 
+        if(page !== undefined && (!Number.isInteger(Number(page)) || Number(page) < 1)) {
+            throw new ErroValidacao("Page inválido")
+        }
+        
+        if(limit !== undefined && (!Number.isInteger(Number(limit)) || Number(limit) < 1)) {
+            throw new ErroValidacao("Limit inválido")
+        }
+
          if(estado) {
             estado = validarSet(estado, estadosDisponveis, "Estado inválido")
         }
@@ -52,6 +62,8 @@ class ProdutoService {
     }
 
     async alterar(id, novosDados_produto) {
+
+        id = validarId(id)
 
         const produto = await ProdutoModel.findById(id) 
 
@@ -83,6 +95,8 @@ class ProdutoService {
     }
 
     async deletar(id) {
+
+        id = validarId(id)
 
         const produto = await ProdutoModel.findById(id)
 

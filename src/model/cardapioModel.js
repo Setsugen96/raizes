@@ -53,6 +53,7 @@ class CardapioModel {
                 cardapio.produto_id,
                 produto.nome AS produto,
                 produto.preco,
+                produto.receita,
                 cardapio.loja_id,
                 loja.nome AS loja,
                 loja.estado,
@@ -81,9 +82,9 @@ class CardapioModel {
         `
         }
 
-        if(page && limit) {
-            const pageNumber = Number(page)
-            const limitNumber = Number(limit)
+        if(page || limit) {
+            const pageNumber = Number(page) || 1
+            const limitNumber = Number(limit) || 10
             const offset = (pageNumber - 1) * limitNumber
             fields.push('LIMIT ? OFFSET ?')
             params.push(limitNumber, offset)

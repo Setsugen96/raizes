@@ -2,7 +2,7 @@ import CardapioModel from "../model/cardapioModel.js"
 import PagamentoModel from "../model/pagamentoModel.js"
 import PedidoModel from "../model/pedidoModel.js"
 import UsuarioModel from "../model/usuarioModel.js"
-import { rolesDisponivels, validarSet } from "../service/untils.js"
+import { rolesDisponivels, validarSet } from "../service/utils.js"
 
 
 class AuthorizationMiddleware {
@@ -103,6 +103,24 @@ class AuthorizationMiddleware {
 
             next()
          
+        }
+    }
+
+    autorizarAcessoCardapio () {
+
+        return async (req, res, next) => {
+
+            if(req.usuario.role !== 'CLIENTE') {
+                return next()
+            }
+
+            if(!req.query.loja_id) {
+                return res.status(403).json({
+                    message: "Informar a Loja é obrigatório."
+                })
+            }
+
+            next()
         }
     }
 

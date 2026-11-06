@@ -1,5 +1,5 @@
 import UsuarioModel from "../model/usuarioModel.js";
-import ErroValidacao from "./untils.js";
+import ErroValidacao from "./utils.js";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 

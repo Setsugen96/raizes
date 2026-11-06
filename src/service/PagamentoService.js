@@ -1,5 +1,5 @@
 import PagamentoModel from "../model/pagamentoModel.js";
-import ErroValidacao, { ErroConflito, ErroNaoEncontrado, statusPagamentos, validarEntradaTexto, validarMetodoPagamento } from "./untils.js";
+import ErroValidacao, { ErroConflito, ErroNaoEncontrado, validarMetodoPagamento } from "./utils.js";
 
 
 

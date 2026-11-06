@@ -1,7 +1,7 @@
 import CardapioModel from "../model/cardapioModel.js"
 import LojaModel from "../model/lojaModel.js"
 import ProdutoModel from "../model/produtoModel.js"
-import ErroValidacao, { ErroNaoEncontrado, formatarData, validarDatas, validarId } from "./untils.js"
+import ErroValidacao, { ErroNaoEncontrado, formatarData, validarDatas, validarId } from "./utils.js"
 
 
 
@@ -54,6 +54,8 @@ class CardapioService {
     }
 
     async buscarPorId(id) {
+
+        id = validarId(id)
         
         const cardapio = await CardapioModel.findById(id)
         const dataAtual = new Date()
@@ -74,6 +76,14 @@ class CardapioService {
     }
 
     async listar(page, limit, loja_id) {
+
+        if(page !== undefined && (!Number.isInteger(Number(page)) || Number(page) < 1)) {
+            throw new ErroValidacao("Page inválido")
+        }
+        
+        if(limit !== undefined && (!Number.isInteger(Number(limit)) || Number(limit) < 1)) {
+            throw new ErroValidacao("Limit inválido")
+        }
         
         if(loja_id) {
 
@@ -97,6 +107,8 @@ class CardapioService {
     }
 
     async alterar(id, cardapio_atualizado) {
+
+        id = validarId(id)
 
         const cardapioExistente = await CardapioModel.findById(id)
         
@@ -179,6 +191,8 @@ class CardapioService {
     }
 
     async deletar(id) {
+
+        id = validarId(id)
 
         const cardapio = await CardapioModel.findById(id)
 

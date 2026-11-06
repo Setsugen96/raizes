@@ -7,4 +7,4 @@ app.listen(PORT, () =>{
     console.log(`Endereço : http://localhost:${PORT}`)
 })
 
-process.env.JWT_SECRET
+

@@ -4,7 +4,7 @@ import ProdutoModel from "../model/produtoModel.js";
 import UsuarioModel from "../model/usuarioModel.js";
 import CardapioModel from "../model/cardapioModel.js";
 import CardapioService from "./CardapioService.js";
-import ErroValidacao, { ErroConflito, ErroNaoEncontrado, validarCanal, validarConsentimento, validarEntradaTexto, validarStatus } from "./untils.js";
+import ErroValidacao, { ErroConflito, ErroNaoEncontrado, validarCanal, validarStatus, validarId } from "./utils.js";
 import connection from "../config/database.js";
 import ItensPedidoModel from "../model/itensPedidoModel.js";
 import PagamentoService from "./PagamentoService.js";
@@ -129,6 +129,8 @@ class PedidoService {
 
     async buscarPorId(id) {
 
+        id = validarId(id)
+
         const pedido = await PedidoModel.findById(id)
 
         if(!pedido) {
@@ -139,12 +141,22 @@ class PedidoService {
     }
 
     async listar(page, limit, cliente_id, loja_id, canal_pedido, status_pedido) {
+
+        if(page !== undefined && (!Number.isInteger(Number(page)) || Number(page) < 1)) {
+            throw new ErroValidacao("Page inválido")
+        }
+        
+        if(limit !== undefined && (!Number.isInteger(Number(limit)) || Number(limit) < 1)) {
+            throw new ErroValidacao("Limit inválido")
+        }
         
         return PedidoModel.findAll(page, limit, cliente_id, loja_id, canal_pedido, status_pedido)
         
     }
 
     async alterar(id, pedidoAtualizado) {
+
+        id = validarId(id)
 
         const pedidoExistente = await PedidoModel.findById(id)
 
@@ -192,6 +204,8 @@ class PedidoService {
     }
 
     async deletar(id) {
+
+        id = validarId(id)
 
         const pedido = await PedidoModel.findById(id)
 

@@ -1,6 +1,6 @@
 import LojaModel from "../model/lojaModel.js"
 
-import ErroValidacao, {validarEntradaTexto, validarSet, estadosDisponveis, ErroNaoEncontrado} from "./untils.js";
+import ErroValidacao, {validarEntradaTexto, validarSet, estadosDisponveis, ErroNaoEncontrado, validarId} from "./utils.js";
 
 class LojaService {
 
@@ -11,6 +11,8 @@ class LojaService {
     }
 
     async buscarPorId(id) {
+
+        id = validarId(id)
 
         const loja = await LojaModel.findById(id)
 
@@ -24,6 +26,14 @@ class LojaService {
 
     async listar(page, limit, estado) {
 
+        if(page !== undefined && (!Number.isInteger(Number(page)) || Number(page) < 1)) {
+            throw new ErroValidacao("Page inválido")
+        }
+
+         if(limit !== undefined && (!Number.isInteger(Number(limit)) || Number(limit) < 1)) {
+            throw new ErroValidacao("Limit inválido")
+        }
+
         if(estado) {
             estado = validarSet(estado, estadosDisponveis, "Estado inválido")
         }
@@ -32,6 +42,8 @@ class LojaService {
     }
 
     async alterar(id, novosDados_loja) {
+
+        id = validarId(id)
 
         const loja = await LojaModel.findById(id)
 
@@ -56,6 +68,8 @@ class LojaService {
     }
 
     async deletar(id) {
+
+        id = validarId(id)
 
         const loja = await LojaModel.findById(id) 
 

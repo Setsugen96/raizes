@@ -80,10 +80,9 @@ class UsuarioModel {
             params.push(loja_id)
         }
         
-
-        if(page && limit) {
-            const pageNumber = Number(page)
-            const limitNumber = Number(limit)
+        if(page || limit) {
+            const pageNumber = Number(page) || 1
+            const limitNumber = Number(limit) || 10
             const offset = (pageNumber - 1) * limitNumber
             fields.push('LIMIT ? OFFSET ?')
             params.push(limitNumber, offset)
