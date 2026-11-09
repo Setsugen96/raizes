@@ -23,6 +23,12 @@ class PagamentoModel {
 
         return result
     }
+
+    async findByPedidoId(id) {
+        const sql = 'SELECT * FROM pagamento WHERE pedido_id = ?'
+        const [result] = await connection.execute(sql,[id])
+        return result[0]
+    }
 }
 
 export default new PagamentoModel()

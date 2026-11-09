@@ -20,6 +20,10 @@ class PagamentoService {
             throw new ErroNaoEncontrado("Pagamento não encontrado")
         }
 
+        if(!resultado || typeof resultado !== 'string') {
+            throw new ErroValidacao("Processamento de pagamento inválido")
+        }
+
         const resultadoFormatado = resultado.trim().toUpperCase()
         if(resultadoFormatado !== 'APROVADO' && resultadoFormatado !== 'RECUSADO') {
             throw new ErroValidacao("Processamento de pagamento inválido.")

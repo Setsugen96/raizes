@@ -3,10 +3,7 @@ import PagamentoController from "../controller/pagamentoController.js";
 import AuthMiddleware from "../middleware/authMiddleware.js";
 import AuthorizationMiddleware from "../middleware/authorizationMiddleware.js";
 
-
 const PagamentoMock = Router()
-
-
 
 /**
  * @swagger

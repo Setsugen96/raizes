@@ -9,6 +9,7 @@ import connection from "../config/database.js";
 import ItensPedidoModel from "../model/itensPedidoModel.js";
 import PagamentoService from "./PagamentoService.js";
 import FidelidadeModel from "../model/fidelidadeModel.js";
+import PagamentoModel from "../model/pagamentoModel.js";
 
 
 
@@ -162,6 +163,12 @@ class PedidoService {
 
         if(!pedidoExistente) {
             throw new ErroNaoEncontrado("Pedido não encontrado.")
+        }
+
+        const pagamento = await PagamentoModel.findByPedidoId(id)
+
+        if(pagamento.status_pagamento !== "APROVADO") {
+            throw new ErroConflito("O Pagamento desse pedido ainda não foi feito.")
         }
 
         if(pedidoAtualizado.cliente_id || pedidoAtualizado.loja_id || pedidoAtualizado.valor_total || pedidoAtualizado.data_pedido) {

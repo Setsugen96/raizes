@@ -43,6 +43,12 @@ class LojaModel {
         return result 
     }
 
+    async findByNome(nome) {
+        const sql = 'SELECT * FROM loja WHERE nome = ?'
+        const [result] = await connection.execute(sql, [nome])
+        return result [0]
+    }
+
     async update(id, loja_atualizada) {
 
         const params = []

@@ -331,30 +331,79 @@ const listaCardapios = [
     }
 ]
 
-async function semearAdministrador() {
 
-    const nome = process.env.SEED_ADMIN_NOME
-    const email = process.env.SEED_ADMIN_EMAIL
-    const senha = process.env.SEED_ADMIN_SENHA
+async function semearUsuarios(nome, login, senha, role, loja_id = null) {
 
-    if(!nome || !email || !senha) {
-        throw new Error("Credenciais iniciais não configuradas")
+    if(!nome || !login || !senha || !role) {
+        throw new Error("Dados do usuário não configurados.")
     }
 
-    const [usuarios] = await connection.execute('SELECT id FROM usuario WHERE email = ?', [email])
+    const rolesComLoja = ['GERENTE', 'ATENDENTE']
+
+    if(rolesComLoja.includes(role) && !loja_id) {
+        throw new Error(`O perfil ${role} precisa estar vinculado a uma loja.`)
+    }
+
+
+    if(!rolesComLoja.includes(role)) {
+        loja_id = null
+    }
+
+    const [usuarios] = await connection.execute('SELECT id FROM usuario WHERE email = ?',[login])
 
     if(usuarios.length > 0) {
-        console.log("Já existe um administrador inicial registrado.")
-        return 
+        console.log(`Usuário ${login} já está cadastrado.`)
+        return
     }
 
     const senhaHash = await bcrypt.hash(senha, 10)
 
-    await connection.execute(`INSERT INTO usuario (nome, email, senha, role, loja_id) VALUES (?, ?, ?, ?, ?)`, 
-        [nome, email, senhaHash, 'ADMINISTRADOR', null]
+    await connection.execute(
+        `INSERT INTO usuario (nome, email, senha, role, loja_id)
+         VALUES (?, ?, ?, ?, ?)`,
+        [nome, login, senhaHash, role, loja_id]
     )
 
-    console.log("Administrador inicial registrado!")
+    console.log(`Usuário ${nome} (${role}) cadastrado!`)
+}
+
+async function semearUsuariosTeste() {
+
+    const lojaAracaju = await LojaModel.findByNome('Loja Aracaju Centro')
+
+    if(!lojaAracaju) {
+        throw new Error("Loja Aracaju Centro não encontrada.")
+    }
+
+    await semearUsuarios(
+        'Admin',
+        'admin@raizes.com',
+        '1234',
+        'ADMINISTRADOR'
+    )
+
+    await semearUsuarios(
+        'Gerente',
+        'gerente@raizes.com',
+        '1234',
+        'GERENTE',
+        lojaAracaju.id
+    )
+
+    await semearUsuarios(
+        'Atendente',
+        'atendente@raizes.com',
+        '1234',
+        'ATENDENTE',
+        lojaAracaju.id
+    )
+
+    await semearUsuarios(
+        'Cliente',
+        'cliente@raizes.com',
+        '1234',
+        'CLIENTE'
+    )
 }
 
 async function semearBancoLojas() {
@@ -451,10 +500,11 @@ async function semearBancoCardapio() {
 
 
 async function executarTodasAsSeeds() {
-    await semearAdministrador()
+    
     await semearBancoLojas()
     await semearBancoProdutos()
     await semearBancoCardapio()
+    await semearUsuariosTeste()
 }
 
 

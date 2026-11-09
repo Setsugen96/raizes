@@ -71,7 +71,10 @@ Execute o comando para inserir os dados iniciais:
 npm run seed
 ```
 
-A seed utiliza as configurações do arquivo `.env` para inserir os dados iniciais no banco.
+A execução da seed cadastra automaticamente os dados iniciais do sistema, incluindo lojas, produtos, cardápios e contas de demonstração para cada perfil de usuário.
+
+As credenciais das contas geradas estão disponíveis na seção **6.1 - Autenticação**.
+
 
 ## 5 - Executando a API
 
@@ -91,8 +94,61 @@ Esse comando utiliza o Nodemon, reiniciando automaticamente o servidor quando ho
 
 ## Observações
 
-A execução da seed cadastra lojas, produtos, cardápios e um usuário administrador inicial.
+A execução da seed cadastra lojas, produtos, cardápios e contas de demonstração para os diferentes perfis de usuário (Administrador, Gerente, Atendente e Cliente).
 
-Com esse usuário administrador, é possível gerenciar funcionários, lojas, produtos e cardápios.
+O administrador possui permissões para gerenciar funcionários, lojas, produtos e cardápios, enquanto os demais perfis possuem permissões específicas de acordo com suas respectivas funções no sistema.
 
-As credenciais do administrador devem ser configuradas pelas variáveis `SEED_ADMIN_*` no arquivo `.env`.
+
+
+## 6 - Documentação da API (Swagger)
+
+A documentação da API foi desenvolvida utilizando Swagger (OpenAPI), permitindo visualizar e testar os endpoints disponíveis.
+
+**URL local:** http://localhost:3000/api-docs
+
+A interface Swagger permite:
+
+- Consultar os endpoints disponíveis e seus respectivos métodos HTTP.
+- Visualizar os parâmetros e campos necessários para realizar as requisições.
+- Consultar exemplos de requisições e respostas.
+- Visualizar os possíveis códigos de status HTTP e suas respectivas descrições.
+- Testar os endpoints diretamente pela interface, com a API em execução.
+
+### 6.1 - Autenticação
+
+Os endpoints protegidos exigem autenticação por meio de token JWT (JSON Web Token).
+
+Para realizar testes utilizando o Swagger:
+
+1. Acesse o endpoint `POST /auth/login` e informe as credenciais de acesso.
+2. Realize o login e copie o token JWT retornado na resposta.
+3. Clique no botão **Authorize**, localizado na parte superior da interface Swagger.
+4. Informe o token JWT no campo de autenticação e confirme.
+
+Após esse procedimento, o token será utilizado automaticamente nas requisições aos endpoints protegidos.
+
+**Observação:** As credenciais abaixo são geradas automaticamente pela seed e destinadas exclusivamente à demonstração e aos testes locais.
+
+| Perfil | E-mail | Senha |
+|---|---|---|
+| Administrador | admin@raizes.com | 1234 |
+| Gerente | gerente@raizes.com | 1234 |
+| Atendente | atendente@raizes.com | 1234 |
+| Cliente | cliente@raizes.com | 1234 |
+
+### 6.2 - Autenticação em clientes externos
+
+Caso utilize ferramentas como Insomnia ou Postman para testar a API, é necessário enviar o token JWT no cabeçalho HTTP (`Headers`) de cada requisição protegida.
+
+Utilize o seguinte formato:
+
+- **Key:** `Authorization`
+- **Value:** `Bearer SEU_TOKEN_JWT`
+
+Substitua `SEU_TOKEN_JWT` pelo token retornado durante o login.
+
+
+
+
+
+
