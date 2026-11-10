@@ -286,7 +286,28 @@ class AuthorizationMiddleware {
 
                 if(Number(req.usuario.id) !== Number(pedido.cliente_id)) {
                     return res.status(403).json({
-                        message: "Cliente só pode pagar seu próprio pedido"
+                        message: "Cliente só pode pagar seu próprio pedido."
+                    })
+                }
+            }
+
+            next()          
+        }
+    }
+
+    autorizarBuscaPagamento() {
+
+        return async (req, res, next) => {
+            
+            const pagamentoPedido = await PagamentoModel.findByPedidoId(req.params.pedido_id)
+
+            if(pagamentoPedido) {
+
+                const pedido = await PedidoModel.findById(pagamentoPedido.pedido_id)
+
+                if(Number(req.usuario.id) !== Number(pedido.cliente_id)) {
+                    return res.status(403).json({
+                        message: "Cliente só pode pagar e ver seu próprio pagamento."
                     })
                 }
             }

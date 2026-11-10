@@ -369,7 +369,9 @@ async function semearUsuarios(nome, login, senha, role, loja_id = null) {
 
 async function semearUsuariosTeste() {
 
-    const lojaAracaju = await LojaModel.findByNome('Loja Aracaju Centro')
+    const [lojas] = await connection.execute('SELECT id FROM loja WHERE nome = ?',['Loja Aracaju Centro'])
+
+    const lojaAracaju = lojas[0]
 
     if(!lojaAracaju) {
         throw new Error("Loja Aracaju Centro não encontrada.")

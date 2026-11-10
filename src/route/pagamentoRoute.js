@@ -3,7 +3,7 @@ import PagamentoController from "../controller/pagamentoController.js";
 import AuthMiddleware from "../middleware/authMiddleware.js";
 import AuthorizationMiddleware from "../middleware/authorizationMiddleware.js";
 
-const PagamentoMock = Router()
+const PagamentoRota = Router()
 
 /**
  * @swagger
@@ -52,6 +52,8 @@ const PagamentoMock = Router()
  *         description: Erro interno do servidor.
  */
 
-PagamentoMock.patch('/pagamentos/:id/mock', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('CLIENTE'), AuthorizationMiddleware.autorizarClientePagamento(), PagamentoController.pagamento)
+PagamentoRota.patch('/pagamentos/:id/mock', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('CLIENTE'), AuthorizationMiddleware.autorizarClientePagamento(), PagamentoController.pagamento)
 
-export default PagamentoMock
+PagamentoRota.get('/pagamentos/:pedido_id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('CLIENTE'), AuthorizationMiddleware.autorizarBuscaPagamento(), PagamentoController.show)
+
+export default PagamentoRota

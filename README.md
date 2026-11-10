@@ -25,7 +25,6 @@ O sistema utiliza autenticação JWT e controle de acesso baseado na role dos us
 - MySQL 8.0 ou superior.
 - npm (instalado junto com o Node.js).
 - Git.
-- Cliente MySQL para executar o script do banco de dados.
 
 ## 4 - Instalação e configuração
 
@@ -55,17 +54,19 @@ Criar, na raiz do projeto, um arquivo `.env` com base no `.env.exemplo`.
 
 Preencher as variáveis com as configurações do ambiente, como as credenciais do **MySQL** e a chave secreta utilizada no **JWT**.
 
+O arquivo `.env` deve conter as configurações de conexão com o MySQL e a chave secreta utilizada na autenticação JWT. Consulte o arquivo `.env.examplo` para verificar as variáveis necessárias.
+
 ### 4.4 - Configurar o banco de dados
 
-Inicie o servidor MySQL e crie o banco de dados:
+Inicie o servidor MySQL e execute o comando abaixo para criar automaticamente o banco de dados e suas respectivas tabelas:
 
-```sql
-CREATE DATABASE db_raizes_do_nordeste;
+```bash
+npm run setup
 ```
 
-Selecione o banco criado e execute o arquivo `database/schema.sql` no MySQL Workbench ou em outro cliente MySQL.
+O script utiliza as configurações definidas no arquivo `.env` e executa automaticamente o arquivo `database/schema.sql`.
 
-Execute o comando para inserir os dados iniciais:
+Após a criação da estrutura do banco, execute o comando abaixo para inserir os dados iniciais:
 
 ```bash
 npm run seed
@@ -74,6 +75,8 @@ npm run seed
 A execução da seed cadastra automaticamente os dados iniciais do sistema, incluindo lojas, produtos, cardápios e contas de demonstração para cada perfil de usuário.
 
 As credenciais das contas geradas estão disponíveis na seção **6.1 - Autenticação**.
+
+**Observação:** O comando `npm run setup` verifica se o banco já possui tabelas. Caso existam, a execução é interrompida para proteger os dados existentes. Portanto, execute a seed somente após a configuração inicial do banco.
 
 
 ## 5 - Executando a API
@@ -136,16 +139,16 @@ Após esse procedimento, o token será utilizado automaticamente nas requisiçõ
 | Atendente | atendente@raizes.com | 1234 |
 | Cliente | cliente@raizes.com | 1234 |
 
-### 6.2 - Autenticação em clientes externos
-
-Caso utilize ferramentas como Insomnia ou Postman para testar a API, é necessário enviar o token JWT no cabeçalho HTTP (`Headers`) de cada requisição protegida.
+### 6.2 - Testes no Insomnia ou Postman
+Para testar a API nesses aplicativos, é necessário enviar o token JWT no cabeçalho HTTP (`Headers`) de cada requisição protegida.
 
 Utilize o seguinte formato:
 
 - **Key:** `Authorization`
 - **Value:** `Bearer SEU_TOKEN_JWT`
 
-Substitua `SEU_TOKEN_JWT` pelo token retornado durante o login.
+Substitua `SEU_TOKEN_JWT` pelo token retornado após o login.
+
 
 
 

@@ -20,6 +20,7 @@ class PagamentoService {
             throw new ErroNaoEncontrado("Pagamento não encontrado")
         }
 
+
         if(!resultado || typeof resultado !== 'string') {
             throw new ErroValidacao("Processamento de pagamento inválido")
         }
@@ -35,6 +36,18 @@ class PagamentoService {
 
         await PagamentoModel.update(pagamento.id, {status_pagamento: resultadoFormatado})
     
+    }
+
+    async buscarPagamentoByPedidoId(id) {
+
+        const pagamento = await PagamentoModel.findByPedidoId(id) 
+        
+        if(!pagamento) {
+            throw new ErroNaoEncontrado("Pagamento não encontrado")
+        }
+
+        return pagamento
+
     }
 
 

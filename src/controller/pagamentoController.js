@@ -41,6 +41,32 @@ class PagamentoController {
             })
         }
     }
+
+    async show(req, res) {
+        
+        try {
+
+            const id = req.params.pedido_id
+            const pagamentoEncontrado = await PagamentoService.buscarPagamentoByPedidoId(id)
+         
+            return res.status(200).json({
+                    message: "Pagamento Encontrado",
+                    pagamento: pagamentoEncontrado
+                })
+
+        } catch (error) {
+
+            if(error.name === "ErroNaoEncontrado") {
+                return res.status(404).json({
+                    message: error.message
+                })
+            }
+
+            return res.status(500).json({
+                message: error.message
+            })
+        }            
+    }
 }
 
 export default new PagamentoController()
