@@ -1,7 +1,6 @@
 import { Router } from "express";
 import PagamentoController from "../controller/pagamentoController.js";
-import AuthMiddleware from "../middleware/authMiddleware.js";
-import AuthorizationMiddleware from "../middleware/authorizationMiddleware.js";
+import AuthMiddleware from "../middleware/authorizationMiddleware.js";
 
 const PagamentoRota = Router()
 
@@ -52,8 +51,37 @@ const PagamentoRota = Router()
  *         description: Erro interno do servidor.
  */
 
-PagamentoRota.patch('/pagamentos/:id/mock', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('CLIENTE'), AuthorizationMiddleware.autorizarClientePagamento(), PagamentoController.pagamento)
+PagamentoRota.patch('/pagamentos/:id/mock', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('CLIENTE'), AuthMiddleware.autorizarClientePagamento(), PagamentoController.pagamento)
 
-PagamentoRota.get('/pagamentos/:pedido_id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('CLIENTE'), AuthorizationMiddleware.autorizarBuscaPagamento(), PagamentoController.show)
+/**
+ * @swagger
+ * /pagamentos/{pedido_id}:
+ *   get:
+ *     summary: Busca pagamento pelo ID do pedido
+ *     description: Retorna os dados do pagamento associado ao pedido informado. Apenas o cliente proprietário do pedido pode realizar essa consulta.
+ *     tags: [Pagamentos]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: pedido_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: ID do pedido associado ao pagamento.
+ *     responses:
+ *       200:
+ *         description: Pagamento encontrado com sucesso.
+ *       401:
+ *         description: Token ausente ou inválido.
+ *       403:
+ *         description: Cliente não possui permissão para consultar este pagamento.
+ *       404:
+ *         description: Pagamento não encontrado.
+ *       500:
+ *         description: Erro interno do servidor.
+ */ 
+PagamentoRota.get('/pagamentos/:pedido_id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('CLIENTE'), AuthMiddleware.autorizarBuscaPagamento(), PagamentoController.show)
 
 export default PagamentoRota

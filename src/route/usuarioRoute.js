@@ -1,7 +1,6 @@
 import {Router} from 'express'
 import UsuarioController from '../controller/usuarioController.js'
-import AuthMiddleware from "../middleware/authMiddleware.js";
-import AuthorizationMiddleware from "../middleware/authorizationMiddleware.js";
+import AuthMiddleware from "../middleware/authorizationMiddleware.js";
 
 const UsuarioRota = Router()
 
@@ -105,7 +104,7 @@ UsuarioRota.post('/usuarios/cliente', UsuarioController.storeCliente)
  *       500:
  *         description: Erro interno do servidor
  */
-UsuarioRota.post('/usuarios/funcionario', AuthMiddleware.autenticarToken , AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR','GERENTE') , AuthorizationMiddleware.autorizarCadastroUsuario(), UsuarioController.store)
+UsuarioRota.post('/usuarios/funcionario', AuthMiddleware.autenticarToken , AuthMiddleware.autorizarRoles('ADMINISTRADOR','GERENTE') , AuthMiddleware.autorizarCadastroUsuario(), UsuarioController.store)
 
 /**
  * @swagger
@@ -142,7 +141,7 @@ UsuarioRota.post('/usuarios/funcionario', AuthMiddleware.autenticarToken , Autho
  *         description: Erro interno do servidor.
  */
 
-UsuarioRota.get('/usuarios/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR','GERENTE'), AuthorizationMiddleware.autorizarAcessoFuncionario(), UsuarioController.show)
+UsuarioRota.get('/usuarios/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR','GERENTE'), AuthMiddleware.autorizarAcessoFuncionario(), UsuarioController.show)
 
 /**
  * @swagger
@@ -198,7 +197,7 @@ UsuarioRota.get('/usuarios/:id', AuthMiddleware.autenticarToken, AuthorizationMi
  *         description: Erro interno do servidor.
  */
 
-UsuarioRota.get('/usuarios',AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR','GERENTE'),AuthorizationMiddleware.autorizarConsultaUsuarios(),  UsuarioController.index)
+UsuarioRota.get('/usuarios', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR','GERENTE'),AuthMiddleware.autorizarConsultaUsuarios(),  UsuarioController.index)
 
 
 /**
@@ -266,7 +265,7 @@ UsuarioRota.get('/usuarios',AuthMiddleware.autenticarToken, AuthorizationMiddlew
  *         description: Erro interno do servidor.
  */
 
-UsuarioRota.put('/usuarios/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'CLIENTE', 'ATENDENTE', 'GERENTE'), AuthorizationMiddleware.autorizarAtualizacaoUsuario(),  UsuarioController.update)
+UsuarioRota.put('/usuarios/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR', 'CLIENTE', 'ATENDENTE', 'GERENTE'), AuthMiddleware.autorizarAtualizacaoUsuario(),  UsuarioController.update)
 
 
 /**
@@ -304,5 +303,5 @@ UsuarioRota.put('/usuarios/:id', AuthMiddleware.autenticarToken, AuthorizationMi
  *         description: Erro interno do servidor.
  */
 
-UsuarioRota.delete('/usuarios/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'),AuthorizationMiddleware.autorizarAcessoFuncionario(), UsuarioController.delete)
+UsuarioRota.delete('/usuarios/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'),AuthMiddleware.autorizarAcessoFuncionario(), UsuarioController.delete)
 export default UsuarioRota

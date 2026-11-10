@@ -155,8 +155,6 @@ class CardapioService {
                 throw new ErroValidacao("Loja não foi encontrada.")
             }   
             
-            // Busca e comparação de ESTADO com a linha já existente do cardápio
-            
             const produtoCardapio = await ProdutoModel.findById(cardapioExistente.produto_id)
 
             if(loja.estado !== produtoCardapio.estado) {

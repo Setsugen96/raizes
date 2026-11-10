@@ -1,7 +1,6 @@
 import { Router } from "express";
 import PedidoController from "../controller/pedidoController.js";
-import AuthMiddleware from "../middleware/authMiddleware.js";
-import AuthorizationMiddleware from "../middleware/authorizationMiddleware.js";
+import AuthMiddleware from "../middleware/authorizationMiddleware.js";
 
 const PedidoRota = Router()
 
@@ -75,7 +74,7 @@ const PedidoRota = Router()
  *         description: Erro interno do servidor.
  */
 
-PedidoRota.post('/pedidos', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('CLIENTE'), PedidoController.store)
+PedidoRota.post('/pedidos', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('CLIENTE'), PedidoController.store)
 
 
 /**
@@ -110,8 +109,8 @@ PedidoRota.post('/pedidos', AuthMiddleware.autenticarToken, AuthorizationMiddlew
  *         description: Erro interno do servidor.
  */
 
-PedidoRota.get('/pedidos/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('CLIENTE', 'ATENDENTE', 'GERENTE', 'ADMINISTRADOR'), 
-AuthorizationMiddleware.autorizarAcessoPedido(), PedidoController.show)
+PedidoRota.get('/pedidos/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('CLIENTE', 'ATENDENTE', 'GERENTE', 'ADMINISTRADOR'), 
+AuthMiddleware.autorizarAcessoPedido(), PedidoController.show)
 
 
 /**
@@ -175,8 +174,8 @@ AuthorizationMiddleware.autorizarAcessoPedido(), PedidoController.show)
  *         description: Erro interno do servidor.
  */
 
-PedidoRota.get('/pedidos', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('CLIENTE', 'ATENDENTE', 'GERENTE', 'ADMINISTRADOR'), 
-AuthorizationMiddleware.autorizarListagemPedidos(), PedidoController.index)
+PedidoRota.get('/pedidos', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('CLIENTE', 'ATENDENTE', 'GERENTE', 'ADMINISTRADOR'), 
+AuthMiddleware.autorizarListagemPedidos(), PedidoController.index)
 
 
 /**
@@ -229,8 +228,8 @@ AuthorizationMiddleware.autorizarListagemPedidos(), PedidoController.index)
  *         description: Erro interno do servidor.
  */
 
-PedidoRota.put('/pedidos/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'ATENDENTE', 'GERENTE'), 
-AuthorizationMiddleware.autorizarAcessoPedido(), PedidoController.update)
+PedidoRota.put('/pedidos/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR', 'ATENDENTE', 'GERENTE'), 
+AuthMiddleware.autorizarAcessoPedido(), PedidoController.update)
 
 /**
  * @swagger
@@ -264,6 +263,6 @@ AuthorizationMiddleware.autorizarAcessoPedido(), PedidoController.update)
  *         description: Erro interno do servidor.
  */
 
-PedidoRota.delete('/pedidos/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR'), PedidoController.delete)
+PedidoRota.delete('/pedidos/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR'), PedidoController.delete)
 
 export default PedidoRota

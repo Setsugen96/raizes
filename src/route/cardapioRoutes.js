@@ -1,7 +1,6 @@
 import { Router } from "express";
 import CardapioController from "../controller/cardapioController.js";
-import AuthMiddleware from "../middleware/authMiddleware.js";
-import AuthorizationMiddleware from "../middleware/authorizationMiddleware.js";
+import AuthMiddleware from "../middleware/authorizationMiddleware.js";
 
 const CardapioRota = Router()
 
@@ -53,7 +52,7 @@ const CardapioRota = Router()
  *       500:
  *         description: Erro interno do servidor
  */
-CardapioRota.post('/cardapios', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('GERENTE', 'ADMINISTRADOR'), AuthorizationMiddleware.autorizarAcessoLoja(), 
+CardapioRota.post('/cardapios', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('GERENTE', 'ADMINISTRADOR'), AuthMiddleware.autorizarAcessoLoja(), 
 CardapioController.store)
 
 /**
@@ -88,7 +87,7 @@ CardapioController.store)
  *       500:
  *         description: Erro interno do servidor
  */
-CardapioRota.get('/cardapios/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('GERENTE', 'ADMINISTRADOR', 'CLIENTE', 'ATENDENTE'), 
+CardapioRota.get('/cardapios/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('GERENTE', 'ADMINISTRADOR', 'CLIENTE', 'ATENDENTE'), 
 CardapioController.show)
 
 /**
@@ -133,8 +132,8 @@ CardapioController.show)
  *       500:
  *         description: Erro interno do servidor
  */
-CardapioRota.get('/cardapios', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('GERENTE', 'ADMINISTRADOR', 'CLIENTE', 'ATENDENTE'),
-AuthorizationMiddleware.autorizarAcessoCardapio(), CardapioController.index)
+CardapioRota.get('/cardapios', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('GERENTE', 'ADMINISTRADOR', 'CLIENTE', 'ATENDENTE'),
+AuthMiddleware.autorizarAcessoCardapio(), CardapioController.index)
 
 /**
  * @swagger
@@ -191,8 +190,8 @@ AuthorizationMiddleware.autorizarAcessoCardapio(), CardapioController.index)
  *       500:
  *         description: Erro interno do servidor
  */
-CardapioRota.put('/cardapios/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('GERENTE', 'ADMINISTRADOR'), 
-AuthorizationMiddleware.autorizarGerenciamentoCardapio(), CardapioController.update)
+CardapioRota.put('/cardapios/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('GERENTE', 'ADMINISTRADOR'), 
+AuthMiddleware.autorizarGerenciamentoCardapio(), CardapioController.update)
 
 /**
  * @swagger
@@ -226,7 +225,7 @@ AuthorizationMiddleware.autorizarGerenciamentoCardapio(), CardapioController.upd
  *       500:
  *         description: Erro interno do servidor
  */
-CardapioRota.delete('/cardapios/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('GERENTE', 'ADMINISTRADOR'), 
-AuthorizationMiddleware.autorizarGerenciamentoCardapio(), CardapioController.delete)
+CardapioRota.delete('/cardapios/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('GERENTE', 'ADMINISTRADOR'), 
+AuthMiddleware.autorizarGerenciamentoCardapio(), CardapioController.delete)
 
 export default CardapioRota

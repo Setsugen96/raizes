@@ -1,7 +1,6 @@
 import {Router} from 'express'
 import LojaController from '../controller/lojaController.js'
-import AuthMiddleware from "../middleware/authMiddleware.js";
-import AuthorizationMiddleware from "../middleware/authorizationMiddleware.js";
+import AuthMiddleware from "../middleware/authorizationMiddleware.js";
 
 const LojaRota = Router()
 
@@ -45,7 +44,7 @@ const LojaRota = Router()
  *       500:
  *         description: Erro interno do servidor
  */
-LojaRota.post('/lojas', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR'),  LojaController.store)
+LojaRota.post('/lojas', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR'),  LojaController.store)
 
 /**
  * @swagger
@@ -79,7 +78,7 @@ LojaRota.post('/lojas', AuthMiddleware.autenticarToken, AuthorizationMiddleware.
  *       500:
  *         description: Erro interno do servidor
  */
-LojaRota.get('/lojas/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'CLIENTE', 'ATENDENTE', 'GERENTE'), LojaController.show)
+LojaRota.get('/lojas/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR', 'CLIENTE', 'ATENDENTE', 'GERENTE'), LojaController.show)
 
 /**
  * @swagger
@@ -123,7 +122,7 @@ LojaRota.get('/lojas/:id', AuthMiddleware.autenticarToken, AuthorizationMiddlewa
  *       500:
  *         description: Erro interno do servidor
  */
-LojaRota.get('/lojas', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'CLIENTE', 'ATENDENTE', 'GERENTE'), LojaController.index)
+LojaRota.get('/lojas', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR', 'CLIENTE', 'ATENDENTE', 'GERENTE'), LojaController.index)
 
 /**
  * @swagger
@@ -172,7 +171,7 @@ LojaRota.get('/lojas', AuthMiddleware.autenticarToken, AuthorizationMiddleware.a
  *       500:
  *         description: Erro interno do servidor
  */
-LojaRota.put('/lojas/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'),  LojaController.update)
+LojaRota.put('/lojas/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'),  LojaController.update)
 
 /**
  * @swagger
@@ -206,6 +205,6 @@ LojaRota.put('/lojas/:id', AuthMiddleware.autenticarToken, AuthorizationMiddlewa
  *       500:
  *         description: Erro interno do servidor
  */
-LojaRota.delete('/lojas/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR'),  LojaController.delete)
+LojaRota.delete('/lojas/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR'),  LojaController.delete)
 
 export default LojaRota 

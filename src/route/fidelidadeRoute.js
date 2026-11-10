@@ -1,7 +1,6 @@
 import {Router} from 'express'
 import FidelidadeController from '../controller/fidelidadeController.js';
-import AuthMiddleware from "../middleware/authMiddleware.js";
-import AuthorizationMiddleware from "../middleware/authorizationMiddleware.js";
+import AuthMiddleware from "../middleware/authorizationMiddleware.js";
 
 const FidelidadeRota = Router()
 
@@ -65,8 +64,8 @@ const FidelidadeRota = Router()
  *         description: Erro interno do servidor.
  */
 
-FidelidadeRota.put('/fidelidade/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'CLIENTE'),  
-AuthorizationMiddleware.autorizarFidelidade() ,FidelidadeController.update)
+FidelidadeRota.put('/fidelidade/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR', 'CLIENTE'),  
+AuthMiddleware.autorizarFidelidade() ,FidelidadeController.update)
 
 /**
  * @swagger
@@ -104,7 +103,7 @@ AuthorizationMiddleware.autorizarFidelidade() ,FidelidadeController.update)
  *         description: Erro interno do servidor.
  */
 
-FidelidadeRota.get('/fidelidade/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'CLIENTE'), 
-AuthorizationMiddleware.autorizarFidelidade(), FidelidadeController.show)
+FidelidadeRota.get('/fidelidade/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR', 'CLIENTE'), 
+AuthMiddleware.autorizarFidelidade(), FidelidadeController.show)
 
 export default FidelidadeRota

@@ -2,10 +2,39 @@ import CardapioModel from "../model/cardapioModel.js"
 import PagamentoModel from "../model/pagamentoModel.js"
 import PedidoModel from "../model/pedidoModel.js"
 import UsuarioModel from "../model/usuarioModel.js"
+import jwt from 'jsonwebtoken'
 import { rolesDisponivels, validarSet } from "../service/utils.js"
 
 
-class AuthorizationMiddleware {
+
+
+class AuthMiddleware {
+
+    autenticarToken(req, res, next) {
+    
+            try {
+    
+                const authHeader = req.headers.authorization 
+                
+                if(!authHeader) {
+                    return res.status(401).json({
+                        message: "Token não foi informado"
+                    })
+                }
+    
+                const token = authHeader.split(' ')[1]
+    
+                const usuario = jwt.verify(token, process.env.JWT_SECRET)
+                req.usuario = usuario 
+                next()
+    
+            } catch (error) {
+    
+                return res.status(401).json({
+                    message: "Token inválido ou expirado"
+                })
+            }        
+        }
 
     autorizarRoles(...rolesPermitidas) {
         
@@ -307,7 +336,7 @@ class AuthorizationMiddleware {
 
                 if(Number(req.usuario.id) !== Number(pedido.cliente_id)) {
                     return res.status(403).json({
-                        message: "Cliente só pode pagar e ver seu próprio pagamento."
+                        message: "Cliente só pode ver seu próprio pagamento."
                     })
                 }
             }
@@ -319,4 +348,4 @@ class AuthorizationMiddleware {
 }
    
 
-export default new AuthorizationMiddleware()
+export default new AuthMiddleware()

@@ -1,7 +1,6 @@
 import {Router} from 'express'
 import ProdutoController from '../controller/produtoController.js'
-import AuthMiddleware from "../middleware/authMiddleware.js";
-import AuthorizationMiddleware from "../middleware/authorizationMiddleware.js";
+import AuthMiddleware from "../middleware/authorizationMiddleware.js";
 
 const ProdutoRota = Router()
 
@@ -54,7 +53,7 @@ const ProdutoRota = Router()
  *       500:
  *         description: Erro interno do servidor
  */
-ProdutoRota.post('/produtos', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR'), ProdutoController.store)
+ProdutoRota.post('/produtos', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR'), ProdutoController.store)
 
 /**
  * @swagger
@@ -88,7 +87,7 @@ ProdutoRota.post('/produtos', AuthMiddleware.autenticarToken, AuthorizationMiddl
  *       500:
  *         description: Erro interno do servidor
  */
-ProdutoRota.get('/produtos/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'), ProdutoController.show)
+ProdutoRota.get('/produtos/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'), ProdutoController.show)
 /**
  * @swagger
  * /produtos:
@@ -131,7 +130,7 @@ ProdutoRota.get('/produtos/:id', AuthMiddleware.autenticarToken, AuthorizationMi
  *       500:
  *         description: Erro interno do servidor
  */
-ProdutoRota.get('/produtos', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'), ProdutoController.index)
+ProdutoRota.get('/produtos', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'), ProdutoController.index)
 
 /**
  * @swagger
@@ -186,7 +185,7 @@ ProdutoRota.get('/produtos', AuthMiddleware.autenticarToken, AuthorizationMiddle
  *       500:
  *         description: Erro interno do servidor
  */
-ProdutoRota.put('/produtos/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR'), ProdutoController.update)
+ProdutoRota.put('/produtos/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR'), ProdutoController.update)
 
 /**
  * @swagger
@@ -220,6 +219,6 @@ ProdutoRota.put('/produtos/:id', AuthMiddleware.autenticarToken, AuthorizationMi
  *       500:
  *         description: Erro interno do servidor
  */
-ProdutoRota.delete('/produtos/:id', AuthMiddleware.autenticarToken, AuthorizationMiddleware.autorizarRoles('ADMINISTRADOR'), ProdutoController.delete)
+ProdutoRota.delete('/produtos/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR'), ProdutoController.delete)
 
 export default ProdutoRota
