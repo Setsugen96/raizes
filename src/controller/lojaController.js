@@ -52,9 +52,35 @@ class LojaController {
 
             if(error.name === "ErroValidacao") {
                 return res.status(400).json({
-                    message:error.message
+                    message: error.message
                 })
             }
+
+            if(error.name === "ErroNaoEncontrado") {
+                return res.status(404).json({
+                    message: error.message
+                })
+            }
+
+            return res.status(500).json({
+                message: error.message
+            })
+        }            
+    }
+
+    async calcularFaturamento(req, res) {
+        
+        try {
+
+            const id = req.params.id
+            const faturamentoLoja = await LojaService.buscarFaturamento(id)      
+         
+            return res.status(200).json({
+                message: "Faturamento da Loja encontrado",
+                    loja: faturamentoLoja
+                })
+
+        } catch (error) {
 
             if(error.name === "ErroNaoEncontrado") {
                 return res.status(404).json({

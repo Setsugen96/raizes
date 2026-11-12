@@ -332,39 +332,19 @@ const listaCardapios = [
 ]
 
 
-async function semearUsuarios(nome, login, senha, role, loja_id = null) {
-
-    if(!nome || !login || !senha || !role) {
-        throw new Error("Dados do usuário não configurados.")
-    }
-
-    const rolesComLoja = ['GERENTE', 'ATENDENTE']
-
-    if(rolesComLoja.includes(role) && !loja_id) {
-        throw new Error(`O perfil ${role} precisa estar vinculado a uma loja.`)
-    }
-
-
-    if(!rolesComLoja.includes(role)) {
-        loja_id = null
-    }
-
-    const [usuarios] = await connection.execute('SELECT id FROM usuario WHERE email = ?',[login])
-
-    if(usuarios.length > 0) {
-        console.log(`Usuário ${login} já está cadastrado.`)
-        return
-    }
+async function semearUsuarios(nome, email, senha, role, loja_id = null) {
 
     const senhaHash = await bcrypt.hash(senha, 10)
 
-    await connection.execute(
+    const [result] = await connection.execute(
         `INSERT INTO usuario (nome, email, senha, role, loja_id)
          VALUES (?, ?, ?, ?, ?)`,
-        [nome, login, senhaHash, role, loja_id]
+        [nome, email, senhaHash, role, loja_id]
     )
 
-    console.log(`Usuário ${nome} (${role}) cadastrado!`)
+    if(role === 'CLIENTE') {
+        await connection.execute('INSERT INTO fidelidade(cliente_id) VALUES(?)', [result.insertId])
+    }
 }
 
 async function semearUsuariosTeste() {
@@ -372,10 +352,6 @@ async function semearUsuariosTeste() {
     const [lojas] = await connection.execute('SELECT id FROM loja WHERE nome = ?',['Loja Aracaju Centro'])
 
     const lojaAracaju = lojas[0]
-
-    if(!lojaAracaju) {
-        throw new Error("Loja Aracaju Centro não encontrada.")
-    }
 
     await semearUsuarios(
         'Admin',
@@ -410,96 +386,41 @@ async function semearUsuariosTeste() {
 
 async function semearBancoLojas() {
 
-    try {
+    for(const loja of listaLojas) {
 
-        for(const loja of listaLojas) {
-
-            const [lojas] = await connection.execute('SELECT id FROM loja WHERE nome = ?', [loja.nome])
-
-            if(lojas.length > 0) {
-                continue 
-            }
-
-            await connection.execute('INSERT INTO loja (nome, estado) VALUES (?, ?)', [loja.nome, loja.estado])
-        }
-
-        console.log("Lojas semeadas e registradas!")
-
-    } catch (error) {
-
-        console.error("Erro ao executar seed de lojas", error.message)
-        throw error
+        await connection.execute('INSERT INTO loja (nome, estado) VALUES (?, ?)', [loja.nome, loja.estado])
     }
 }
 
 async function semearBancoProdutos() {
 
-    try {
+    for(const produto of listaProdutos) {
 
-        for(const produto of listaProdutos) {
-
-            const [produtos] = await connection.execute('SELECT id FROM produto WHERE nome = ? AND estado = ?', [produto.nome, produto.estado])
-
-            if(produtos.length > 0) {
-                continue
-            }
-
-            await connection.execute('INSERT INTO produto (nome, preco, estado, receita) VALUES (?, ?, ?, ?)', 
-                [produto.nome, produto.preco, produto.estado, produto.receita])
-        }
-
-        console.log("Produtos semeados e registrados!")
-
-    } catch (error) {
-
-        console.error("Erro ao executar seed de produtos", error.message)
-        throw error
+    await connection.execute('INSERT INTO produto (nome, preco, estado, receita) VALUES (?, ?, ?, ?)', 
+        [produto.nome, produto.preco, produto.estado, produto.receita])
     }
-    
 }
 
 async function semearBancoCardapio() {
 
-    try {
-        
-        const [lojas] = await connection.execute('SELECT id, nome, estado FROM loja')
-        const [produtos] = await connection.execute('SELECT id, nome, estado FROM produto')
+    const [lojas] = await connection.execute('SELECT id, nome, estado FROM loja')
+    const [produtos] = await connection.execute('SELECT id, nome, estado FROM produto')
 
-        for(const item of listaCardapios) {
+    for(const item of listaCardapios) {
 
-            const lojaEncontrada = lojas.find(l => l.nome === item.loja)
+        const lojaEncontrada = lojas.find(l => l.nome === item.loja)
+        const produtoEncontrado = produtos.find(p => p.nome === item.produto && p.estado === lojaEncontrada?.estado)
 
-            const produtoEncontrado = produtos.find(p => p.nome === item.produto && p.estado === lojaEncontrada?.estado)
-
-            if(!lojaEncontrada || !produtoEncontrado) {
-                throw new Error(`Loja ou produto não encontrado`)
-            }
-
-            const [cardapios] = await connection.execute('SELECT id FROM cardapio WHERE loja_id = ? AND produto_id = ?', [lojaEncontrada.id, produtoEncontrado.id])
-
-            if(cardapios.length > 0) {
-                continue 
-            }
-
-            await connection.execute(`INSERT INTO cardapio (loja_id, produto_id, data_inicio, data_fim) VALUES (?, ?, ?, ?)`, 
-                [
-                    lojaEncontrada.id,
-                    produtoEncontrado.id,
-                    item.data_inicio ?? null,
-                    item.data_fim ?? null
-                ]
-            )
-        }
-
-        console.log('Cardápio semeado com sucesso!')
-
-    } catch (error) {
-
-        console.error('Erro ao executar seed do cardápio:', error.message)
-        throw error
-    } 
+        await connection.execute(`INSERT INTO cardapio (loja_id, produto_id, data_inicio, data_fim) VALUES (?, ?, ?, ?)`, 
+            [
+                lojaEncontrada.id,
+                produtoEncontrado.id,
+                item.data_inicio ?? null,
+                item.data_fim ?? null
+            ]
+        )
+    }
 }
-
 
 async function executarTodasAsSeeds() {
     
@@ -509,20 +430,12 @@ async function executarTodasAsSeeds() {
     await semearUsuariosTeste()
 }
 
-
 async function iniciarSeed() {
 
-    try {
-
-        await executarTodasAsSeeds()
-        console.log("Seeds executadas")
-
-    } catch (error) {
-        console.error ("Erro ao executar seeds", error.message)
-
-    } finally {
-        await connection.end()
-    }
+   await executarTodasAsSeeds()
+   console.log("Seeds executadas com sucesso.")
+   await connection.end()
+    
 }
 
 iniciarSeed()

@@ -10,7 +10,7 @@ export const estadosDisponveis = new Set([
     "sergipe"
 ])
 
-export const rolesDisponivels = new Set([
+export const rolesDisponiveis = new Set([
     "cliente",
     "gerente",
     "atendente"
@@ -46,7 +46,7 @@ export const statusPagamentos = new Set([
 ])
 
 
-export default class ErroValidacao extends Error {
+export class ErroValidacao extends Error {
     constructor(message) {
         super(message)
         this.name = "ErroValidacao"
@@ -67,47 +67,13 @@ export class ErroConflito extends Error {
     }
 }
 
-export function validarStatus(status) {
-
-    if(!isNaN(Number(status))) {
-        throw new ErroValidacao("Dados inválidos")
-    }
-
-    status = validarEntradaTexto(status, "Informar o novo status do Pedido é obrigatório.")
-    const statusFormatado = status.toLowerCase()
-
-    if(!statusDisponiveis.has(statusFormatado)) {
-        throw new ErroValidacao("Status inválido.")
-    }
-
-    return statusFormatado.toUpperCase()
-}
-
-export function validarCanal(canal) {
-    
-     if(!isNaN(Number(canal))) {
-        throw new ErroValidacao("Dados inválidos")
-    }
-
-    canal = validarEntradaTexto(canal, "Informar o Canal do Pedido é obrigatório.")
-    const canalFormatado = canal.trim().toLowerCase()
-        
-    if(!canaisDisponiveis.has(canalFormatado)) {
-        throw new ErroValidacao("Canal inválido.")
-    }  
-        
-    return canalFormatado.toUpperCase()
-}
-
-
-export function validarSet(dado, array, mensagemErro) {
+export function validarValor(dado, array, mensagemErro) {
 
     if(!dado || dado.trim() === '') {
         throw new ErroValidacao(mensagemErro)
     }
 
     dado = validarEntradaTexto(dado, mensagemErro)
-
     const dadoFormatado = dado.trim().toLowerCase()
 
     if(!array.has(dadoFormatado)) {
@@ -170,6 +136,7 @@ export function validarConsentimento(consentimento) {
 
     return consentimento
 }
+
 
 export function verificarVersaoTermo(versao) {
 

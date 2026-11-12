@@ -52,71 +52,71 @@ async findById(id) {
 }   
 
 
-    async findPedidoStatus(cliente_id) {
-        const sql = 'SELECT * FROM pedido WHERE cliente_id = ? AND status_pedido NOT IN (?, ?)'
+async findPedidoStatus(cliente_id) {
+    const sql = 'SELECT * FROM pedido WHERE cliente_id = ? AND status_pedido NOT IN (?, ?)'
 
-        const [result] = await connection.execute(sql, [cliente_id, 'FINALIZADO', 'CANCELADO'])
+    const [result] = await connection.execute(sql, [cliente_id, 'FINALIZADO', 'CANCELADO'])
 
-        return result [0]
+    return result [0]
+}
+
+async findAll(page, limit, cliente_id, loja_id, canal_pedido, status_pedido) {
+
+    const params = []
+    const fields = []
+    let sql = 'SELECT * FROM pedido'
+
+    if(cliente_id) {
+        fields.push('WHERE cliente_id = ?')
+        params.push(cliente_id)
     }
 
-    async findAll(page, limit, cliente_id, loja_id, canal_pedido, status_pedido) {
-
-        const params = []
-        const fields = []
-        let sql = 'SELECT * FROM pedido'
+    if(loja_id) {
 
         if(cliente_id) {
-            fields.push('WHERE cliente_id = ?')
-            params.push(cliente_id)
+            fields.push('AND loja_id = ?')
+        } else {
+            fields.push('WHERE loja_id = ?')
         }
-
-        if(loja_id) {
-
-            if(cliente_id) {
-                fields.push('AND loja_id = ?')
-            } else {
-                fields.push('WHERE loja_id = ?')
-            }
-            params.push(loja_id)    
-        }
-
-        if(canal_pedido) {
-
-            if(cliente_id || loja_id) {
-                fields.push('AND canal_pedido = ?')
-            } else {
-                fields.push('WHERE canal_pedido = ?')
-            }
-            params.push(canal_pedido)
-        }
-
-        if(status_pedido) {
-
-            if(cliente_id || loja_id || canal_pedido) {
-                fields.push('AND status_pedido = ?')
-            } else {
-                fields.push('WHERE status_pedido = ?')
-            }
-            params.push(status_pedido)
-        }
-
-        if(page || limit) {
-            const pageNumber = Number(page) || 1
-            const limitNumber = Number(limit) || 10
-            const offset = (pageNumber - 1) * limitNumber
-            fields.push('LIMIT ? OFFSET ?')
-            params.push(limitNumber, offset)
-        }
-
-        if(fields.length > 0) {
-            sql += ' ' + fields.join(' ')
-        }
-
-        const [result] = await connection.execute(sql, params)
-        return result
-
+        params.push(loja_id)    
     }
+
+    if(canal_pedido) {
+
+        if(cliente_id || loja_id) {
+            fields.push('AND canal_pedido = ?')
+        } else {
+            fields.push('WHERE canal_pedido = ?')
+        }
+        params.push(canal_pedido)
+    }
+
+    if(status_pedido) {
+
+        if(cliente_id || loja_id || canal_pedido) {
+            fields.push('AND status_pedido = ?')
+        } else {
+            fields.push('WHERE status_pedido = ?')
+        }
+        params.push(status_pedido)
+    }
+
+    if(page || limit) {
+        const pageNumber = Number(page) || 1
+        const limitNumber = Number(limit) || 10
+        const offset = (pageNumber - 1) * limitNumber
+        fields.push('LIMIT ? OFFSET ?')
+        params.push(limitNumber, offset)
+    }
+
+    if(fields.length > 0) {
+        sql += ' ' + fields.join(' ')
+     }
+
+    const [result] = await connection.execute(sql, params)
+    return result
+
+}
 
     async update(id, pedido_atualizado) {
 

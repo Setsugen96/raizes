@@ -48,7 +48,7 @@ class LojaModel {
         const [result] = await connection.execute(sql, [nome])
         return result [0]
     }
-
+    
     async update(id, loja_atualizada) {
 
         const params = []
@@ -77,6 +77,14 @@ class LojaModel {
         const sql = 'DELETE FROM loja WHERE id = ?'
         const [result] = await connection.execute(sql, [id])
         return result
+    }
+
+    async getfaturamento(id) {
+        const sql = `SELECT SUM(valor_total) AS faturamento FROM pedido WHERE loja_id = ? AND status_pedido = 'FINALIZADO'`
+        
+        const [result] = await connection.execute(sql, [id])
+
+        return result [0].faturamento
     }
 }
 

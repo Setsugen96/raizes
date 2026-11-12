@@ -24,6 +24,12 @@ class UsuarioController {
                 })
             }
 
+            if(error.name === "ErroConflito") {
+                return res.status(409).json({
+                    message:error.message
+                })
+            }
+
             if(error.name === "ErroValidacao") {
                 return res.status(400).json({
                     message:error.message 

@@ -22,8 +22,7 @@ class AuthController {
                 
                 token: token
             })
-            
-
+        
         } catch (error) {
 
             if(error.name === "ErroValidacao") {

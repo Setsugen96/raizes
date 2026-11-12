@@ -173,6 +173,38 @@ LojaRota.get('/lojas', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarR
  */
 LojaRota.put('/lojas/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'),  LojaController.update)
 
+
+/**
+ * @swagger
+ * /lojas/faturamento/{id}:
+ *   get:
+ *     summary: Consulta o faturamento de uma loja
+ *     description: Retorna o faturamento total dos pedidos concluídos da loja informada. Administradores podem consultar qualquer loja, enquanto gerentes podem consultar somente o faturamento da loja à qual estão vinculados.
+ *     tags: [Lojas]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 2
+ *         description: ID da loja.
+ *     responses:
+ *       200:
+ *         description: Faturamento da loja encontrado com sucesso.
+ *       401:
+ *         description: Token ausente ou inválido.
+ *       403:
+ *         description: Usuário sem permissão para consultar o faturamento desta loja.
+ *       404:
+ *         description: Loja não encontrada.
+ *       500:
+ *         description: Erro interno do servidor.
+ */
+LojaRota.get('/lojas/faturamento/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'), AuthMiddleware.autorizarAcessoFaturamento(),
+LojaController.calcularFaturamento)
 /**
  * @swagger
  * /lojas/{id}:

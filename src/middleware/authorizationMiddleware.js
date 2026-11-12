@@ -3,7 +3,8 @@ import PagamentoModel from "../model/pagamentoModel.js"
 import PedidoModel from "../model/pedidoModel.js"
 import UsuarioModel from "../model/usuarioModel.js"
 import jwt from 'jsonwebtoken'
-import { rolesDisponivels, validarSet } from "../service/utils.js"
+import { rolesDisponiveis, validarValor } from "../service/utils.js"
+import LojaModel from "../model/lojaModel.js"
 
 
 
@@ -59,7 +60,7 @@ class AuthMiddleware {
                 return next()
             }
 
-            const roleBody = validarSet(req.body.role, rolesDisponivels, "Role inválida")
+            const roleBody = validarValor(req.body.role, rolesDisponiveis, "Role inválida")
             if(req.usuario.role === 'GERENTE' && roleBody === 'ATENDENTE') {
                if(req.usuario.loja_id !== req.body.loja_id) {
                     return res.status(403).json({
@@ -252,12 +253,6 @@ class AuthMiddleware {
             }
 
             if(req.usuario.role === 'CLIENTE') {
-                
-                if('loja_id' in req.query || 'canal_pedido' in req.query || 'status_pedido' in req.query) {
-                    return res.status(403).json({
-                        message: "O Cliente só pode acessar pedidos."
-                    })         
-                }
 
                 if(req.query.cliente_id === undefined) {
                     return res.status(403).json({
@@ -299,6 +294,26 @@ class AuthMiddleware {
                 })
             }
 
+            next()
+        }
+    }
+
+    autorizarAcessoFaturamento() {
+
+        return async (req, res, next) => {
+
+            if(req.usuario.role === 'ADMINISTRADOR') {
+                return next()
+            }
+
+            const loja = await LojaModel.findById(req.params.id)
+            
+            if(loja && Number(req.usuario.loja_id) !== Number(loja.id)) {
+                return res.status(403).json({
+                    message: "Gerente pode apenas ver o faturamento da sua loja de atuação."
+                }) 
+            }    
+            
             next()
         }
     }
