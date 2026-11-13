@@ -24,6 +24,8 @@ async findById(id) {
             p.*,
             u.nome AS cliente_nome,
             l.nome AS loja_nome,
+            pag.id AS pagamento_id,
+            pag.status_pagamento,
             (
                 SELECT JSON_ARRAYAGG(
                     JSON_OBJECT(
@@ -44,6 +46,8 @@ async findById(id) {
             ON p.cliente_id = u.id
         INNER JOIN loja l
             ON p.loja_id = l.id
+        LEFT JOIN pagamento pag
+            ON pag.pedido_id = p.id
         WHERE p.id = ?
     `
     const [result] = await connection.execute(sql, [id]);
@@ -53,18 +57,26 @@ async findById(id) {
 
 
 async findPedidoStatus(cliente_id) {
-    const sql = 'SELECT * FROM pedido WHERE cliente_id = ? AND status_pedido NOT IN (?, ?)'
+    const sql = 'SELECT * FROM pedido WHERE cliente_id = ?'
 
-    const [result] = await connection.execute(sql, [cliente_id, 'FINALIZADO', 'CANCELADO'])
+    const [result] = await connection.execute(sql, [cliente_id])
 
-    return result [0]
+    return result 
 }
 
 async findAll(page, limit, cliente_id, loja_id, canal_pedido, status_pedido) {
 
     const params = []
     const fields = []
-    let sql = 'SELECT * FROM pedido'
+    let sql = `
+        SELECT 
+            p.*,
+            pag.id AS pagamento_id,
+            pag.status_pagamento
+        FROM pedido p
+        LEFT JOIN pagamento pag
+            ON pag.pedido_id = p.id
+    `
 
     if(cliente_id) {
         fields.push('WHERE cliente_id = ?')

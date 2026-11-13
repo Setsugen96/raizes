@@ -149,6 +149,59 @@ Utilize o seguinte formato:
 
 Substitua `SEU_TOKEN_JWT` pelo token retornado após o login.
 
+Na pasta Fluxo de Teste possue as rotas de teste ordenadas e é recomendável que cada rota seja usada na ordem
+
+### 6.2 - Testes no Insomnia ou Postman
+
+Para testar a API nesses aplicativos, é necessário enviar o token JWT no cabeçalho HTTP (`Headers`) de cada requisição protegida.
+
+Utilize o seguinte formato:
+
+- **Key:** `Authorization`
+- **Value:** `Bearer SEU_TOKEN_JWT`
+
+Substitua `SEU_TOKEN_JWT` pelo token retornado após realizar o login.
+
+### 6.3 - Fluxo de Teste
+
+A Coleção de testes está na raiz do projeto. Import o arquivo `insomniaTestes`.
+
+Inicialmente, o fluxo apresenta a criação de uma conta de cliente, seguida pelo login e pela consulta das lojas e seus respectivos cardápios. Com essas informações, é possível criar um pedido e realizar o pagamento simulado.
+
+Em seguida, deve ser realizado o login na conta genérica de administrador, criada automaticamente durante a execução da seed. Com o acesso de administrador, é possível criar uma conta de atendente vinculada à loja onde o pedido foi realizado. Após a criação, basta fazer login com as credenciais do atendente para continuar o fluxo.
+
+A partir desse momento, as próximas operações são realizadas do ponto de vista do atendente. Ele poderá consultar os pedidos da loja à qual está vinculado e gerenciar aqueles que ainda estão pendentes de atendimento.
+
+No cenário demonstrado, o pedido já estará com o pagamento aprovado. Dessa forma, o atendente poderá atualizar o campo `status_pedido`, alterando a situação do pedido conforme as opções permitidas pela API.
+
+**01 - Criação de Conta Cliente:** Crie uma conta de cliente na API.
+
+**02 - Login do Cliente:** Realize o login utilizando as credenciais escolhidas na etapa anterior. Salve o token JWT de login do cliente para ser utilizado nas próximas requisições.
+
+**03 - Consulta de Lojas:** Consulte as lojas cadastradas e salve o ID de uma delas para consultar seu cardápio.
+
+**04 - Consulta de Cardápio:** Consulte os produtos disponíveis no cardápio da loja escolhida colocando em loja_id na URL.
+
+**05 - Criação de Pedido:** Envie o pedido utilizando o modelo de Body disponibilizado, preenchendo os dados necessários com o Id da loja escolhida anteriormente, e o id do produto junto a sua quantidade.
+
+**06 - Consulta de Pedidos do Cliente:** Confirme que o pedido está criado consultando os pedidos vinculados a conta que está logada usando o cliente_id.
+
+**07 - Realização do Pagamento:** Insira o ID do pagamento na URL e realize o pagamento simulado, enviando `"APROVADO"` no campo `resultado` do Body.
+
+**08 - Login do Administrador:** Realize o login como administrador para obter o token JWT necessário para a criação da conta do atendente.
+
+**09 - Criação de Conta Atendente:** Crie uma conta de atendente utilizando o modelo de Body disponibilizado. Altere apenas o campo `loja_id` para o ID da loja escolhida anteriormente.
+
+**10 - Login do Atendente:** Realize o login com as credenciais da conta de atendente criada na etapa anterior e salve o token JWT para as próximas requisições.
+
+**11 - Consulta de Pedidos da Loja:** Consulte os pedidos da loja vinculada ao atendente. É possível filtrar os pedidos pelo status desejado, como pendentes. Altere o campo `loja_id` para o ID da loja à qual o atendente está vinculado.
+
+**12 - Atualização do Status do Pedido:** Após verificar que o pagamento do cliente foi aprovado, o atendente poderá atualizar o status do pedido para `"EM_PREPARO"`, `"EM_ROTA_ENTREGA"`, `"CANCELADO"` ou `"FINALIZADO"`, conforme as opções permitidas pela API.
+
+**13 - Verificação da Atualização:** Consulte novamente os pedidos da loja para verificar se o status do pedido foi atualizado corretamente.
+
+
+
 
 
 

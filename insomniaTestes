@@ -1,0 +1,408 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Raízes do Nordeste API - Testes
+meta:
+  id: wrk_9314b1e1deb544b680b75fccb06af101
+  created: 1788433555530
+  modified: 1794234427885
+  description: ""
+collection:
+  - name: Fluxo de Teste
+    meta:
+      id: fld_97e5e350172744a581f511ce059b5930
+      created: 1794238483260
+      modified: 1794314228353
+      sortKey: -1794238483260
+      description: ""
+    children:
+      - url: http://localhost:3000/auth/login
+        name: 02 - Login Cliente
+        meta:
+          id: req_bd30aba046f342e5b0542315e8f6dcd1
+          created: 1794307051168
+          modified: 1794317209979
+          isPrivate: false
+          description: ""
+          sortKey: -1794238671293
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email": "clienteTeste@raizes.com",
+            	"senha": "1234"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/usuarios/cliente
+        name: 01 - Criação de Conta Cliente
+        meta:
+          id: req_b656cde841344c0aa6ce53edea29673f
+          created: 1794310603457
+          modified: 1794354057431
+          isPrivate: false
+          description: ""
+          sortKey: -1794238671393
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nome": "Cliente de Testes",
+            	"email": "clienteTeste@raizes.com",
+            	"senha": "1234"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/lojas
+        name: 03 - Consultar Lojas
+        meta:
+          id: req_e838aaf069b4422d980ef22c425d8e88
+          created: 1794313657058
+          modified: 1794566909222
+          isPrivate: false
+          description: ""
+          sortKey: -1794238671193
+        method: GET
+        headers:
+          - name: Authorization
+            value: bearer
+              eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGUiOiJDTElFTlRFIiwibG9qYV9pZCI6bnVsbCwiaWF0IjoxNzk0NTY2OTAyLCJleHAiOjE3OTQ1NzQxMDJ9.7Qme4zZJ3ALrBlhjsNJ0jolI6eaE5Mt7Sjl8K2jKZ64
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/cardapios?page=1&limit=10&loja_id=7
+        name: 04 - Consultar Cardápio de alguma loja
+        meta:
+          id: req_3b20212b3743462ea60b97ab4b96aebf
+          created: 1794313992082
+          modified: 1794566367195
+          isPrivate: false
+          description: ""
+          sortKey: -1794238671093
+        method: GET
+        headers:
+          - name: Authorization
+            value: bearer
+              eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGUiOiJDTElFTlRFIiwibG9qYV9pZCI6bnVsbCwiaWF0IjoxNzk0NTY2MzU2LCJleHAiOjE3OTQ1NzM1NTZ9.szAVzoSJU9H3A2Ty-e6PiHf_QXIbyq8DBJIegqgqa-E
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/pedidos
+        name: 05 - Criar Pedido
+        meta:
+          id: req_e558564aabbb438ba2c23751d9053d2e
+          created: 1794314089294
+          modified: 1794568039327
+          isPrivate: false
+          description: ""
+          sortKey: -1794238670993
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "loja_id": 7,
+              "canal_pedido": "app",
+            	"metodo_pagamento": "pix",
+            	"usar_pontos": false,
+              "itens": [
+                {
+                  "produto_id": 40,
+                  "quantidade": 1
+                },
+            		{
+            			"produto_id": 43,
+            			"quantidade": 1
+            		}
+              ]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: bearer
+              eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGUiOiJDTElFTlRFIiwibG9qYV9pZCI6bnVsbCwiaWF0IjoxNzk0NTY2OTAyLCJleHAiOjE3OTQ1NzQxMDJ9.7Qme4zZJ3ALrBlhjsNJ0jolI6eaE5Mt7Sjl8K2jKZ64
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/pagamentos/37/mock
+        name: 07 - Realizar Pagamento
+        meta:
+          id: req_c1e92f3ac81f4263acfa479b2d49d2f9
+          created: 1794314281514
+          modified: 1794567913453
+          isPrivate: false
+          description: ""
+          sortKey: -1794238670793
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"resultado":  "aprovado"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: bearer
+              eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGUiOiJDTElFTlRFIiwibG9qYV9pZCI6bnVsbCwiaWF0IjoxNzk0NTY2OTAyLCJleHAiOjE3OTQ1NzQxMDJ9.7Qme4zZJ3ALrBlhjsNJ0jolI6eaE5Mt7Sjl8K2jKZ64
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/pedidos/?cliente_id=19
+        name: "06 - Buscar Pedido "
+        meta:
+          id: req_e546923cd8044c57bb612eaef3b56f4d
+          created: 1794314419274
+          modified: 1794567898487
+          isPrivate: false
+          description: ""
+          sortKey: -1794238670893
+        method: GET
+        headers:
+          - name: Authorization
+            value: bearer
+              eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGUiOiJDTElFTlRFIiwibG9qYV9pZCI6bnVsbCwiaWF0IjoxNzk0NTY2OTAyLCJleHAiOjE3OTQ1NzQxMDJ9.7Qme4zZJ3ALrBlhjsNJ0jolI6eaE5Mt7Sjl8K2jKZ64
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/auth/login
+        name: 08 - Login Administrador
+        meta:
+          id: req_3eb8eb1fbb224fdca5b7f3184db9bf71
+          created: 1794317146698
+          modified: 1794395519544
+          isPrivate: false
+          description: ""
+          sortKey: -1794238670693
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email" : "admin@raizes.com",
+            	"senha": "1234"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/usuarios/funcionario
+        name: 09 - Criar Atendente que vai gerenciar o Pedido
+        meta:
+          id: req_478172e3a8744451b28fa2399f8d0fac
+          created: 1794317218861
+          modified: 1794317406584
+          isPrivate: false
+          description: ""
+          sortKey: -1794238670593
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nome": "Atendente de Teste",
+            	"email": "teste@raizes.com",
+            	"senha": "1234",
+            	"loja_id": 7,
+            	"role": "ATENDENTE"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: bearer
+              eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInJvbGUiOiJBRE1JTklTVFJBRE9SIiwibG9qYV9pZCI6bnVsbCwiaWF0IjoxNzk0MzE3MjEyLCJleHAiOjE3OTQzMjQ0MTJ9.XS8xPiqVLON5yvn_bA-5xyRXD7c_kNOPLx21ngmpO7g
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/pedidos?loja_id=7&status_pedido=PENDENTE
+        name: 11 - Atendente ver Pedidos da sua Loja de atuação
+        meta:
+          id: req_2c9c4cdce8474373a2733f22f374f06e
+          created: 1794317500488
+          modified: 1794568513512
+          isPrivate: false
+          description: ""
+          sortKey: -1794238670393
+        method: GET
+        headers:
+          - name: Authorization
+            value: bearer
+              eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInJvbGUiOiJBRE1JTklTVFJBRE9SIiwibG9qYV9pZCI6bnVsbCwiaWF0IjoxNzk0NTY4NDI0LCJleHAiOjE3OTQ1NzU2MjR9.VoPGWcBdgMGAf0Py77_NQylRvIRpFoBRA9MKhrhs1I8
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/auth/login
+        name: 10 - Login Atendente
+        meta:
+          id: req_00ae161e652a4acd99f42bbf94fb756e
+          created: 1794317537569
+          modified: 1794317590914
+          isPrivate: false
+          description: ""
+          sortKey: -1794238670493
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email": "teste@raizes.com",
+            	"senha": "1234"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/pedidos/50
+        name: 12 - Atendente finalizar pedido
+        meta:
+          id: req_aa990f5917f74093a54f25a59fa0f715
+          created: 1794318188674
+          modified: 1794568467222
+          isPrivate: false
+          description: ""
+          sortKey: -1794238670193
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"status_pedido": "finalizado"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: bearer
+              eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGUiOiJBVEVOREVOVEUiLCJsb2phX2lkIjo3LCJpYXQiOjE3OTQzMTc1OTEsImV4cCI6MTc5NDMyNDc5MX0._vD-4o7tgzJBZxCyZYBs_z4Og-_1TiV3Lm4HOu0b3do
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/pedidos?loja_id=7
+        name: 13 - Ver Pedido Finalizado
+        meta:
+          id: req_5ec87d1f5bec446fb9ad70efb1881734
+          created: 1794318326143
+          modified: 1794568525937
+          isPrivate: false
+          description: ""
+          sortKey: -1794238670093
+        method: GET
+        headers:
+          - name: Authorization
+            value: bearer
+              eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInJvbGUiOiJBRE1JTklTVFJBRE9SIiwibG9qYV9pZCI6bnVsbCwiaWF0IjoxNzk0NTY4NDI0LCJleHAiOjE3OTQ1NzU2MjR9.VoPGWcBdgMGAf0Py77_NQylRvIRpFoBRA9MKhrhs1I8
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_e217da01d1652ebeb5cfce7303d606262918177b
+    created: 1792628802453
+    modified: 1792628802453
+environments:
+  name: Base Environment
+  meta:
+    id: env_e217da01d1652ebeb5cfce7303d606262918177b
+    created: 1788433555531
+    modified: 1792628802407
+    isPrivate: false

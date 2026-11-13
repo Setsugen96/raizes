@@ -20,7 +20,6 @@ const listaLojas = [
 ]
 
 const listaProdutos = [
-    // Sergipe
     {
         nome: "Arroz Recheado",
         preco: "16.0",
@@ -40,7 +39,6 @@ const listaProdutos = [
         receita: "carne de sol, macaxeira, manteiga de garrafa"
     },
 
-    // Bahia
     {
         nome: "Acarajé Recheado",
         preco: "15.0",
@@ -60,7 +58,6 @@ const listaProdutos = [
         receita: "pão, camarão, leite de coco, amendoim, azeite de dendê"
     },
 
-    // Alagoas
     {
         nome: "Sururu de Capote",
         preco: "24.0",
@@ -80,7 +77,6 @@ const listaProdutos = [
         receita: "peixe, batata, tomate, cebola, pimentão"
     },
 
-    // Pernambuco
     {
         nome: "Baião de Dois",
         preco: "20.0",
@@ -100,7 +96,6 @@ const listaProdutos = [
         receita: "carne seca, macaxeira, queijo coalho"
     },
 
-    // Ceará
     {
         nome: "Baião de Dois Cearense",
         preco: "21.0",
@@ -120,7 +115,6 @@ const listaProdutos = [
         receita: "carne de sol, farinha de mandioca, cebola"
     },
 
-    // Maranhão
     {
         nome: "Arroz de Cuxá",
         preco: "22.0",
@@ -140,7 +134,6 @@ const listaProdutos = [
         receita: "peixe, arroz, feijão, farinha de mandioca"
     },
 
-    // Paraíba
     {
         nome: "Rubacão",
         preco: "23.0",
@@ -160,7 +153,6 @@ const listaProdutos = [
         receita: "flocos de milho, ovos, manteiga"
     },
 
-    // Piauí
     {
         nome: "Maria Isabel",
         preco: "24.0",
@@ -180,7 +172,6 @@ const listaProdutos = [
         receita: "arroz, galinha caipira, cebola, pimentão"
     },
 
-    // Rio Grande do Norte
     {
         nome: "Carne de Sol na Nata",
         preco: "32.0",
@@ -198,139 +189,381 @@ const listaProdutos = [
         preco: "29.0",
         estado: "RIO GRANDE DO NORTE",
         receita: "camarão, macaxeira, queijo coalho, leite de coco"
+    },
+
+    {
+        nome: "Macarronada Sergipana",
+        preco: "25.0",
+        estado: "SERGIPE",
+        receita: "macarrão, carne moída, tomate, cebola, queijo coalho"
+    },
+    {
+        nome: "Galinha de Capoeira com Pirão",
+        preco: "32.0",
+        estado: "SERGIPE",
+        receita: "galinha caipira, farinha de mandioca, caldo de galinha, coentro"
+    },
+    {
+        nome: "Queijada Sergipana",
+        preco: "12.0",
+        estado: "SERGIPE",
+        receita: "queijo coalho, coco ralado, açúcar, ovos"
+    },
+    {
+        nome: "Pirão de Leite com Carne de Sol",
+        preco: "27.0",
+        estado: "SERGIPE",
+        receita: "leite, farinha de mandioca, carne de sol, manteiga de garrafa"
+    },
+
+    {
+        nome: "Bobó de Camarão",
+        preco: "34.0",
+        estado: "BAHIA",
+        receita: "camarão, aipim, leite de coco, azeite de dendê, coentro"
+    },
+    {
+        nome: "Xinxim de Galinha",
+        preco: "29.0",
+        estado: "BAHIA",
+        receita: "frango, amendoim, castanha de caju, leite de coco, azeite de dendê"
+    },
+    {
+        nome: "Ensopado de Robalo",
+        preco: "36.0",
+        estado: "BAHIA",
+        receita: "robalo, tomate, cebola, pimentão, leite de coco"
+    },
+    {
+        nome: "Efó Baiano",
+        preco: "24.0",
+        estado: "BAHIA",
+        receita: "folhas de língua-de-vaca, camarão seco, amendoim, azeite de dendê"
+    },
+
+    {
+        nome: "Tapioca Recheada de Camarão",
+        preco: "23.0",
+        estado: "ALAGOAS",
+        receita: "goma de tapioca, camarão, queijo coalho, leite de coco"
+    },
+    {
+        nome: "Chiclete de Camarão",
+        preco: "38.0",
+        estado: "ALAGOAS",
+        receita: "camarão, queijo muçarela, requeijão, creme de leite, tomate"
+    },
+    {
+        nome: "Peixada de Penedo",
+        preco: "33.0",
+        estado: "ALAGOAS",
+        receita: "peixe, leite de coco, batata, tomate, pimentão, coentro"
+    },
+    {
+        nome: "Sururu ao Leite de Coco",
+        preco: "26.0",
+        estado: "ALAGOAS",
+        receita: "sururu, leite de coco, cebola, tomate, coentro"
+    },
+
+    {
+        nome: "Caldeirada Pernambucana",
+        preco: "35.0",
+        estado: "PERNAMBUCO",
+        receita: "peixe, camarão, polvo, tomate, cebola, leite de coco"
+    },
+    {
+        nome: "Cartola Pernambucana",
+        preco: "16.0",
+        estado: "PERNAMBUCO",
+        receita: "banana, queijo manteiga, açúcar, canela"
+    },
+    {
+        nome: "Bolo de Rolo",
+        preco: "14.0",
+        estado: "PERNAMBUCO",
+        receita: "massa fina de bolo, goiabada, açúcar"
+    },
+    {
+        nome: "Sopa de Feijão Pernambucana",
+        preco: "19.0",
+        estado: "PERNAMBUCO",
+        receita: "feijão, macarrão, batata, cenoura, carne seca"
     }
 ]
 
 const listaCardapios = [
-    // Sergipe
     {
         loja: "Loja Aracaju Centro",
-        produto: "Arroz Recheado",
-        data_inicio: "2026-11-01",
-        data_fim: "2026-11-30"
+        produto: "Galinha de Capoeira com Pirão",
+        data_inicio: "2026-06-01",
+        data_fim: "2026-06-15"
     },
     {
         loja: "Loja Aracaju Centro",
-        produto: "Cuscuz Nordestino",
+        produto: "Macarronada Sergipana",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Aracaju Centro",
+        produto: "Pirão de Leite com Carne de Sol",
         data_inicio: null,
         data_fim: null
     },
     {
         loja: "Loja Socorro",
-        produto: "Carne de Sol com Macaxeira",
-        data_inicio: "2026-12-01",
-        data_fim: "2026-12-31"
+        produto: "Macarronada Sergipana",
+        data_inicio: null,
+        data_fim: null
     },
     {
         loja: "Loja Socorro",
+        produto: "Queijada Sergipana",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Socorro",
+        produto: "Pirão de Leite com Carne de Sol",
+        data_inicio: "2026-06-10",
+        data_fim: "2026-06-25"
+    },
+    {
+        loja: "Loja Lagarto",
         produto: "Arroz Recheado",
         data_inicio: null,
         data_fim: null
     },
     {
         loja: "Loja Lagarto",
+        produto: "Macarronada Sergipana",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Lagarto",
+        produto: "Galinha de Capoeira com Pirão",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Estância",
+        produto: "Arroz Recheado",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Estância",
         produto: "Cuscuz Nordestino",
         data_inicio: null,
         data_fim: null
     },
     {
         loja: "Loja Estância",
-        produto: "Carne de Sol com Macaxeira",
+        produto: "Queijada Sergipana",
         data_inicio: null,
         data_fim: null
     },
     {
         loja: "Loja Itabaiana",
-        produto: "Arroz Recheado",
+        produto: "Carne de Sol com Macaxeira",
+        data_inicio: "2026-06-05",
+        data_fim: "2026-06-20"
+    },
+    {
+        loja: "Loja Itabaiana",
+        produto: "Cuscuz Nordestino",
         data_inicio: null,
         data_fim: null
     },
-
-    // Bahia
     {
-        loja: "Loja Salvador Barra",
-        produto: "Moqueca Baiana",
-        data_inicio: "2026-11-10",
-        data_fim: "2026-12-10"
+        loja: "Loja Itabaiana",
+        produto: "Macarronada Sergipana",
+        data_inicio: null,
+        data_fim: null
     },
     {
         loja: "Loja Salvador Barra",
-        produto: "Acarajé Recheado",
+        produto: "Bobó de Camarão",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Salvador Barra",
+        produto: "Xinxim de Galinha",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Salvador Barra",
+        produto: "Efó Baiano",
         data_inicio: null,
         data_fim: null
     },
     {
         loja: "Loja Feira de Santana",
-        produto: "Vatapá",
+        produto: "Acarajé Recheado",
+        data_inicio: "2026-06-12",
+        data_fim: "2026-06-30"
+    },
+    {
+        loja: "Loja Feira de Santana",
+        produto: "Bobó de Camarão",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Feira de Santana",
+        produto: "Xinxim de Galinha",
         data_inicio: null,
         data_fim: null
     },
     {
         loja: "Loja Ilhéus",
-        produto: "Acarajé Recheado",
+        produto: "Moqueca Baiana",
         data_inicio: null,
         data_fim: null
     },
-
-    // Alagoas
     {
-        loja: "Loja Maceió Ponta Verde",
-        produto: "Sururu de Capote",
-        data_inicio: "2026-11-05",
-        data_fim: "2026-11-25"
+        loja: "Loja Ilhéus",
+        produto: "Bobó de Camarão",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Ilhéus",
+        produto: "Ensopado de Robalo",
+        data_inicio: null,
+        data_fim: null
     },
     {
         loja: "Loja Maceió Ponta Verde",
-        produto: "Peixada Alagoana",
+        produto: "Chiclete de Camarão",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Maceió Ponta Verde",
+        produto: "Tapioca Recheada de Camarão",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Maceió Ponta Verde",
+        produto: "Sururu ao Leite de Coco",
         data_inicio: null,
         data_fim: null
     },
     {
         loja: "Loja Arapiraca",
-        produto: "Cuscuz com Carne de Sol",
+        produto: "Peixada Alagoana",
+        data_inicio: "2026-06-08",
+        data_fim: "2026-06-22"
+    },
+    {
+        loja: "Loja Arapiraca",
+        produto: "Chiclete de Camarão",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Arapiraca",
+        produto: "Sururu ao Leite de Coco",
         data_inicio: null,
         data_fim: null
     },
     {
         loja: "Loja Penedo",
-        produto: "Sururu de Capote",
+        produto: "Peixada Alagoana",
         data_inicio: null,
         data_fim: null
     },
-
-    // Pernambuco
     {
-        loja: "Loja Recife Boa Viagem",
-        produto: "Arrumadinho",
-        data_inicio: "2026-11-15",
-        data_fim: "2026-12-15"
+        loja: "Loja Penedo",
+        produto: "Chiclete de Camarão",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Penedo",
+        produto: "Tapioca Recheada de Camarão",
+        data_inicio: null,
+        data_fim: null
     },
     {
         loja: "Loja Recife Boa Viagem",
-        produto: "Baião de Dois",
+        produto: "Caldeirada Pernambucana",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Recife Boa Viagem",
+        produto: "Cartola Pernambucana",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Recife Boa Viagem",
+        produto: "Bolo de Rolo",
         data_inicio: null,
         data_fim: null
     },
     {
         loja: "Loja Olinda",
-        produto: "Escondidinho de Carne Seca",
-        data_inicio: null,
-        data_fim: null
-    },
-    {
-        loja: "Loja Caruaru",
         produto: "Arrumadinho",
         data_inicio: null,
         data_fim: null
     },
     {
-        loja: "Loja Petrolina",
+        loja: "Loja Olinda",
+        produto: "Caldeirada Pernambucana",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Olinda",
+        produto: "Cartola Pernambucana",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Caruaru",
         produto: "Baião de Dois",
+        data_inicio: "2026-06-15",
+        data_fim: "2026-06-30"
+    },
+    {
+        loja: "Loja Caruaru",
+        produto: "Cartola Pernambucana",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Caruaru",
+        produto: "Sopa de Feijão Pernambucana",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Petrolina",
+        produto: "Escondidinho de Carne Seca",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Petrolina",
+        produto: "Caldeirada Pernambucana",
+        data_inicio: null,
+        data_fim: null
+    },
+    {
+        loja: "Loja Petrolina",
+        produto: "Bolo de Rolo",
         data_inicio: null,
         data_fim: null
     }
 ]
-
 
 async function semearUsuarios(nome, email, senha, role, loja_id = null) {
 

@@ -39,10 +39,11 @@ class PedidoService {
 
         //Verifica se o Cliente tem algum pedido que não esteja como finalizado ou cancelado. Se for o caso ele retorna erro,
         //porque o cliente já teria algum pedido em andamento
-        const statusPedidoCliente = await PedidoModel.findPedidoStatus(pedido.cliente_id)
+        const clientePedido = await PedidoModel.findPedidoStatus(pedido.cliente_id)
+        const pedidoAndamento = clientePedido.some(pedido_some => pedido_some.status_pedido !== "FINALIZADO" && pedido_some.status_pedido !== "CANCELADO")
 
-        if(statusPedidoCliente) {
-            throw new ErroConflito("Esse cliente já tem um pedido em andamento")
+        if(pedidoAndamento) {
+            throw new ErroConflito("Cliente já possue um pedido em andamento")
         }
 
         //Variável responsável por acumular o valor total dos itens do pedido
