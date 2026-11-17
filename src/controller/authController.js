@@ -17,7 +17,8 @@ class AuthController {
                 usuario: {
                     id: usuarioAutenticado.id ,
                     nome: usuarioAutenticado.nome,
-                    role: usuarioAutenticado.role
+                    role: usuarioAutenticado.role,
+                    loja: usuarioAutenticado.loja_id
                 },
                 
                 token: token

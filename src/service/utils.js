@@ -38,14 +38,6 @@ export const pagamentosDisponiveis = new Set([
     "dinheiro"
 ])
 
-export const statusPagamentos = new Set([
-    "aguardando",
-    "pago",
-    "cancelado",
-    "recusado"
-])
-
-
 export class ErroValidacao extends Error {
     constructor(message) {
         super(message)

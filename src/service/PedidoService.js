@@ -203,12 +203,23 @@ class PedidoService {
         const pagamento = await PagamentoModel.findByPedidoId(id)
 
         //Verifica se o pagamento do pedido foi realizado e aprovado pelo sistema
-        if(pagamento.status_pagamento !== "APROVADO") {
-            throw new ErroConflito("O Pagamento desse pedido ainda não foi feito.")
-        }
+        
         // Verifica se está tentando alterar algo além do status e canal do pedido
         if(pedidoAtualizado.cliente_id || pedidoAtualizado.loja_id || pedidoAtualizado.valor_total || pedidoAtualizado.data_pedido) {
             throw new ErroValidacao("Esses dados não podem ser alterados")
+        }
+
+        // Verifica se o pagamento foi recusado. Se for deve só aceitar a atualização do status para CANCELADO.
+        if(pagamento.status_pagamento === "RECUSADO") {
+            if(pedidoAtualizado.status_pedido !== "CANCELADO") {
+                throw new ErroConflito("Um pagamento recusado deve ser cancelado.")
+            }
+
+            return PedidoModel.update(id, pedidoAtualizado)
+        }
+
+        if(pagamento.status_pagamento !== "APROVADO") {
+            throw new ErroConflito("O Pagamento desse pedido ainda não foi feito.")
         }
 
         //Verifica se algo está sendo enviado para alterações
@@ -224,7 +235,7 @@ class PedidoService {
             pedidoAtualizado.status_pedido = validarValor(pedidoAtualizado.status_pedido, statusDisponiveis, "Status Inválido")
 
             // Verifica se o pedido já possue status de FINALIZADO e impede alterações de status
-            if(pedidoExistente.status_pedido === "FINALIZADO") {
+        if(pedidoExistente.status_pedido === "FINALIZADO") {
                 throw new ErroConflito("Não é possível alterar o status de um pedido finalizado.")
             }
         }

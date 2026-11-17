@@ -52,9 +52,9 @@ npm install
 
 Criar, na raiz do projeto, um arquivo `.env` com base no `.env.exemplo`.
 
-Preencher as variáveis com as configurações do ambiente, como as credenciais do **MySQL** e a chave secreta utilizada no **JWT**.
+Preencher as variáveis com as configurações do ambiente, como as credenciais do **MySQL** e a chave secreta que deseja utilizar no **JWT**.
 
-O arquivo `.env` deve conter as configurações de conexão com o MySQL e a chave secreta utilizada na autenticação JWT. Consulte o arquivo `.env.examplo` para verificar as variáveis necessárias.
+O arquivo `.env` deve conter as configurações de conexão com o MySQL e a chave secreta utilizada na autenticação JWT. Consulte o arquivo `.env.exemplo` para verificar as variáveis necessárias.
 
 ### 4.4 - Configurar o banco de dados
 
