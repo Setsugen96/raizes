@@ -211,8 +211,9 @@ class PedidoService {
 
         // Verifica se o pagamento foi recusado. Se for deve só aceitar a atualização do status para CANCELADO.
         if(pagamento.status_pagamento === "RECUSADO") {
+            pedidoAtualizado.status_pedido = pedidoAtualizado.status_pedido.toUpperCase()
             if(pedidoAtualizado.status_pedido !== "CANCELADO") {
-                throw new ErroConflito("Um pagamento recusado deve ser cancelado.")
+                throw new ErroConflito("O Pagamento desse Pedido não foi Aprovado. Aguarde a aprovação ou Cancele.")
             }
 
             return PedidoModel.update(id, pedidoAtualizado)

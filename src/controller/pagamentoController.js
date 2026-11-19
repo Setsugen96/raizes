@@ -10,11 +10,9 @@ class PagamentoController {
             const idPagamento = req.params
             const result = req.body
 
-            await PagamentoService.processarPagamento(idPagamento.id, result.resultado)
+            const response = await PagamentoService.processarPagamento(idPagamento.id, result.resultado)
 
-            return res.status(200).json({
-                message: "Pagamento realizado com sucesso"
-            })
+            return res.status(200).json({response})
             
         } catch (error) {
 

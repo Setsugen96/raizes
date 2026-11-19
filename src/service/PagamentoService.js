@@ -20,7 +20,6 @@ class PagamentoService {
             throw new ErroNaoEncontrado("Pagamento não encontrado")
         }
 
-
         if(!resultado || typeof resultado !== 'string') {
             throw new ErroValidacao("Processamento de pagamento inválido")
         }
@@ -30,11 +29,29 @@ class PagamentoService {
             throw new ErroValidacao("Processamento de pagamento inválido.")
         }
 
-        if(pagamento.status_pagamento !== 'PENDENTE') {
-            throw new ErroConflito("Pagamento não está pendente")
+        if(pagamento.status_pagamento === 'APROVADO') {
+            throw new ErroConflito("Pagamento já foi feito.")
+        }
+
+        if(pagamento.status_pagamento !== "PENDENTE" && pagamento.status_pagamento !== 'RECUSADO') {
+            throw new ErroConflito("Pagamento não pode ser processado")
+        }
+
+        if(pagamento.status_pagamento === 'RECUSADO' && resultadoFormatado === 'RECUSADO') {
+            throw new ErroConflito("O Pagamento já foi recusado.")
         }
 
         await PagamentoModel.update(pagamento.id, {status_pagamento: resultadoFormatado})
+
+        if(resultadoFormatado === 'APROVADO') {
+            return {
+                message: "Pagamento Aprovado com Sucesso"
+            }
+        } else {
+            return {
+                message: "Pagamento Recusado"
+            }
+        }
     
     }
 

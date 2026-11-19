@@ -50,11 +50,11 @@ npm install
 
 ### 4.3 - Configurar variáveis de ambiente
 
-Criar, na raiz do projeto, um arquivo `.env` com base no `.env.exemplo`.
+Criar, na raiz do projeto, um arquivo `.env` com base no `.env.example`.
 
 Preencher as variáveis com as configurações do ambiente, como as credenciais do **MySQL** e a chave secreta que deseja utilizar no **JWT**.
 
-O arquivo `.env` deve conter as configurações de conexão com o MySQL e a chave secreta utilizada na autenticação JWT. Consulte o arquivo `.env.exemplo` para verificar as variáveis necessárias.
+O arquivo `.env` deve conter as configurações de conexão com o MySQL e a chave secreta utilizada na autenticação JWT. Consulte o arquivo `.env.example` para verificar as variáveis necessárias.
 
 ### 4.4 - Configurar o banco de dados
 
@@ -149,62 +149,220 @@ Utilize o seguinte formato:
 
 Substitua `SEU_TOKEN_JWT` pelo token retornado após o login.
 
-Na pasta Fluxo de Teste possue as rotas de teste ordenadas e é recomendável que cada rota seja usada na ordem
+### 6.3 – Fluxo Testes
 
-### 6.2 - Testes no Insomnia ou Postman
+A coleção de testes da API está disponível na raiz do projeto, no arquivo `insomniaTestes`. Para executá-la, importe o arquivo no Insomnia.
 
-Para testar a API nesses aplicativos, é necessário enviar o token JWT no cabeçalho HTTP (`Headers`) de cada requisição protegida.
+Os testes foram organizados em **7 etapas**, com as requisições numeradas de T01 a T24. Para garantir o funcionamento correto do fluxo, recomenda-se executar as requisições na ordem apresentada.
 
-Utilize o seguinte formato:
+A coleção utiliza recursos do Insomnia para automatizar o preenchimento de informações entre as requisições:
 
-- **Key:** `Authorization`
-- **Value:** `Bearer SEU_TOKEN_JWT`
+- **Token de autenticação:** após o login, um script salva automaticamente o token recebido. Ao realizar login em outra conta, o token anterior é substituído pelo novo.
+- **Response Body Attribute:** utilizado nas requisições que dependem de informações retornadas por requisições anteriores, como o ID do pagamento e o ID do pedido.
 
-Substitua `SEU_TOKEN_JWT` pelo token retornado após realizar o login.
+#### Etapa 1 – Validação de Cadastro
 
-### 6.3 - Fluxo de Teste
+**T01 – Cadastro de cliente com dados válidos**
 
-A Coleção de testes está na raiz do projeto. Import o arquivo `insomniaTestes`.
+- **Endpoint:** `POST /usuarios/cliente`
+- **Pré-condição:** Não possuir uma conta cadastrada com o mesmo e-mail.
+- **Entrada:** `{ nome, email, senha }`
+- **Resultado esperado:** HTTP 201 – Mensagem de confirmação e informações do usuário (`id`, `nome`, `email` e `role`).
+- **Evidência:** Cadastro de cliente com campos válidos.
 
-Inicialmente, o fluxo apresenta a criação de uma conta de cliente, seguida pelo login e pela consulta das lojas e seus respectivos cardápios. Com essas informações, é possível criar um pedido e realizar o pagamento simulado.
+**T02 – Cadastro de cliente sem campo obrigatório**
 
-Em seguida, deve ser realizado o login na conta genérica de administrador, criada automaticamente durante a execução da seed. Com o acesso de administrador, é possível criar uma conta de atendente vinculada à loja onde o pedido foi realizado. Após a criação, basta fazer login com as credenciais do atendente para continuar o fluxo.
+- **Endpoint:** `POST /usuarios/cliente`
+- **Pré-condição:** Enviar o cadastro sem informar um dos campos obrigatórios.
+- **Entrada:** `{ nome, email }`
+- **Resultado esperado:** HTTP 400 – Mensagem de erro.
+- **Evidência:** Cadastro sem campo obrigatório.
 
-A partir desse momento, as próximas operações são realizadas do ponto de vista do atendente. Ele poderá consultar os pedidos da loja à qual está vinculado e gerenciar aqueles que ainda estão pendentes de atendimento.
+**T03 – Tentativa de criar conta de administrador sem autorização**
 
-No cenário demonstrado, o pedido já estará com o pagamento aprovado. Dessa forma, o atendente poderá atualizar o campo `status_pedido`, alterando a situação do pedido conforme as opções permitidas pela API.
+- **Endpoint:** `POST /usuarios/funcionario`
+- **Pré-condição:** Tentar registrar uma conta de administrador sem possuir autorização.
+- **Entrada:** `{ nome, email, senha, role }`
+- **Resultado esperado:** HTTP 403 – Mensagem de erro.
+- **Evidência:** Tentativa de criação de conta de administrador sem autorização.
 
-**01 - Criação de Conta Cliente:** Crie uma conta de cliente na API.
+#### Etapa 2 – Autenticação e Autorização
 
-**02 - Login do Cliente:** Realize o login utilizando as credenciais escolhidas na etapa anterior. Salve o token JWT de login do cliente para ser utilizado nas próximas requisições.
+**T04 – Login com credenciais inválidas**
 
-**03 - Consulta de Lojas:** Consulte as lojas cadastradas e salve o ID de uma delas para consultar seu cardápio.
+- **Endpoint:** `POST /auth/login`
+- **Pré-condição:** Tentar acessar a conta de cliente utilizando credenciais incorretas.
+- **Entrada:** `{ email, senha }`
+- **Resultado esperado:** HTTP 400 – Mensagem de erro.
+- **Evidência:** Login de cliente com credenciais inválidas.
 
-**04 - Consulta de Cardápio:** Consulte os produtos disponíveis no cardápio da loja escolhida colocando em loja_id na URL.
+**T05 – Login de cliente com credenciais válidas**
 
-**05 - Criação de Pedido:** Envie o pedido utilizando o modelo de Body disponibilizado, preenchendo os dados necessários com o Id da loja escolhida anteriormente, e o id do produto junto a sua quantidade.
+- **Endpoint:** `POST /auth/login`
+- **Pré-condição:** Possuir uma conta de cliente cadastrada.
+- **Entrada:** `{ email, senha }`
+- **Resultado esperado:** HTTP 200 – Mensagem de confirmação, informações do usuário (`id`, `nome`, `role`) e token de acesso.
+- **Evidência:** Login de cliente com credenciais válidas.
 
-**06 - Consulta de Pedidos do Cliente:** Confirme que o pedido está criado consultando os pedidos vinculados a conta que está logada usando o cliente_id.
+**T06 – Cliente tentando acessar rota exclusiva para administrador**
 
-**07 - Realização do Pagamento:** Insira o ID do pagamento na URL e realize o pagamento simulado, enviando `"APROVADO"` no campo `resultado` do Body.
+- **Endpoint:** `POST /lojas`
+- **Pré-condição:** Estar autenticado como cliente e tentar cadastrar uma loja.
+- **Entrada:** `{ nome, estado }`
+- **Resultado esperado:** HTTP 401 – Mensagem de erro relacionada à autenticação.
+- **Evidência:** Cliente tentando acessar a rota exclusiva para administrador.
 
-**08 - Login do Administrador:** Realize o login como administrador para obter o token JWT necessário para a criação da conta do atendente.
+**T07 – Tentativa de acessar rota de cardápio sem token**
 
-**09 - Criação de Conta Atendente:** Crie uma conta de atendente utilizando o modelo de Body disponibilizado. Altere apenas o campo `loja_id` para o ID da loja escolhida anteriormente.
+- **Endpoint:** `GET /cardapios?page=1&limit=10&loja_id=1`
+- **Pré-condição:** Não estar autenticado em nenhuma conta.
+- **Entrada:** Nenhuma.
+- **Resultado esperado:** HTTP 401 – Mensagem de erro informando que o token não foi enviado.
+- **Evidência:** Tentativa de acessar rota de cardápio sem token.
 
-**10 - Login do Atendente:** Realize o login com as credenciais da conta de atendente criada na etapa anterior e salve o token JWT para as próximas requisições.
+#### Etapa 3 – Consulta de Lojas, Cardápios e Criação de Pedidos
 
-**11 - Consulta de Pedidos da Loja:** Consulte os pedidos da loja vinculada ao atendente. É possível filtrar os pedidos pelo status desejado, como pendentes. Altere o campo `loja_id` para o ID da loja à qual o atendente está vinculado.
+**T08 – Consultar lojas cadastradas**
 
-**12 - Atualização do Status do Pedido:** Após verificar que o pagamento do cliente foi aprovado, o atendente poderá atualizar o status do pedido para `"EM_PREPARO"`, `"EM_ROTA_ENTREGA"`, `"CANCELADO"` ou `"FINALIZADO"`, conforme as opções permitidas pela API.
+- **Endpoint:** `GET /lojas`
+- **Pré-condição:** Estar autenticado em qualquer conta.
+- **Entrada:** Nenhuma.
+- **Resultado esperado:** HTTP 200 – Lista de lojas cadastradas, contendo `id`, `nome` e `estado`.
+- **Evidência:** Consulta de lojas.
 
-**13 - Verificação da Atualização:** Consulte novamente os pedidos da loja para verificar se o status do pedido foi atualizado corretamente.
+**T09 – Consultar cardápio de uma loja**
 
+- **Endpoint:** `GET /cardapios?page=1&limit=10&loja_id=1`
+- **Pré-condição:** A loja consultada deve estar cadastrada.
+- **Entrada:** Nenhuma.
+- **Resultado esperado:** HTTP 200 – Lista de produtos associados ao cardápio, contendo informações como `id`, `produto_id`, `receita`, `loja_id`, `estado`, `data_inicio`, `data_fim` e `disponibilidade`.
+- **Evidência:** Consulta do cardápio da loja 1.
 
+**T10 – Tentativa de realizar pedido com produto fora do período de vendas**
 
+- **Endpoint:** `POST /pedidos`
+- **Pré-condição:** Tentar realizar um pedido utilizando um produto indisponível devido ao seu período de vendas.
+- **Entrada:** `{ loja_id, canal_pedido, metodo_pagamento, usar_pontos, itens: [{ produto_id, quantidade }] }`
+- **Resultado esperado:** HTTP 409 – Mensagem de erro.
+- **Evidência:** Tentativa de realizar pedido com produto fora do período de vendas.
 
+**T11 – Tentativa de realizar pedido com produto que não pertence ao cardápio da loja**
 
+- **Endpoint:** `POST /pedidos`
+- **Pré-condição:** Tentar realizar um pedido utilizando um produto que não está associado ao cardápio da loja selecionada.
+- **Entrada:** `{ loja_id, canal_pedido, metodo_pagamento, usar_pontos, itens: [{ produto_id, quantidade }] }`
+- **Resultado esperado:** HTTP 409 – Mensagem de erro.
+- **Evidência:** Tentativa de realizar pedido com produto que não vende na loja.
 
+**T12 – Criar pedido com dados válidos**
 
+- **Endpoint:** `POST /pedidos`
+- **Pré-condição:** Estar autenticado como cliente e possuir produtos disponíveis no cardápio da loja.
+- **Entrada:** `{ loja_id, canal_pedido, metodo_pagamento, usar_pontos, itens: [{ produto_id, quantidade }] }`
+- **Resultado esperado:** HTTP 201 – Mensagem de confirmação da criação do pedido.
+- **Evidência:** Realização de pedido.
 
+**T13 – Consultar todos os pedidos associados ao cliente**
+
+- **Endpoint:** `GET /pedidos?cliente_id=4`
+- **Pré-condição:** Possuir pedidos registrados na conta do cliente.
+- **Entrada:** Nenhuma.
+- **Resultado esperado:** HTTP 200 – Lista de pedidos associados ao cliente.
+- **Evidência:** Consulta de todos os pedidos do cliente.
+
+**T14 – Consultar pedidos pendentes do cliente**
+
+- **Endpoint:** `GET /pedidos?cliente_id=4&status_pedido=PENDENTE`
+- **Pré-condição:** Possuir um pedido pendente registrado.
+- **Entrada:** Nenhuma.
+- **Resultado esperado:** HTTP 200 – Lista de pedidos pendentes associados ao cliente.
+- **Evidência:** Consulta dos pedidos pendentes do cliente.
+
+#### Etapa 4 – Realização de Pagamento Recusado
+
+**T15 – Processar pagamento com resultado recusado**
+
+- **Endpoint:** `PATCH /pagamentos/{pagamento_id}/mock`
+- **Pré-condição:** Estar autenticado como o cliente responsável pelo pedido pendente.
+- **Entrada:** `{ resultado: "RECUSADO" }`
+- **Resultado esperado:** HTTP 200 – Mensagem informando que o pagamento foi recusado.
+- **Evidência:** Processamento de pagamento MOCK recusado.
+
+#### Etapa 5 – Tentativa de Atualizar Pedido com Pagamento Recusado
+
+**T16 – Login do atendente responsável pela loja**
+
+- **Endpoint:** `POST /auth/login`
+- **Pré-condição:** Possuir uma conta de atendente associada à mesma loja em que o pedido foi realizado.
+- **Entrada:** `{ email, senha }`
+- **Resultado esperado:** HTTP 200 – Mensagem de confirmação, informações do usuário (`id`, `nome`, `role`, `loja`) e token de acesso.
+- **Evidência:** Login do atendente responsável pelo pedido recusado.
+
+**T17 – Consultar pedidos pendentes da loja**
+
+- **Endpoint:** `GET /pedidos?page=1&limit=10&loja_id=1&status_pedido=PENDENTE`
+- **Pré-condição:** Estar autenticado como atendente associado à loja consultada.
+- **Entrada:** Nenhuma.
+- **Resultado esperado:** HTTP 200 – Informações dos pedidos, incluindo `id`, `cliente_id`, `loja_id`, `canal_pedido`, `status_pedido`, `valor_total`, `data_pedido` e `status_pagamento`.
+- **Evidência:** Consulta dos pedidos pendentes da loja de atuação.
+
+**T18 – Atendente tentando atualizar pedido com pagamento recusado**
+
+- **Endpoint:** `PUT /pedidos/{pedido_id}`
+- **Pré-condição:** Estar autenticado como atendente da mesma loja do pedido, cujo pagamento foi recusado.
+- **Entrada:** `{ status_pedido: "FINALIZADO" }`
+- **Resultado esperado:** HTTP 409 – Mensagem de erro informando que a alteração não é permitida.
+- **Evidência:** Tentativa de alterar o status de um pedido com pagamento recusado.
+
+#### Etapa 6 – Realização de Pagamento Aprovado
+
+**T19 – Login de cliente para processar pagamento aprovado**
+
+- **Endpoint:** `POST /auth/login`
+- **Pré-condição:** Possuir uma conta de cliente cadastrada.
+- **Entrada:** `{ email, senha }`
+- **Resultado esperado:** HTTP 200 – Mensagem de confirmação, informações do usuário (`id`, `nome`, `role`) e token de acesso.
+- **Evidência:** Login de cliente.
+
+**T20 – Processar pagamento com resultado aprovado**
+
+- **Endpoint:** `PATCH /pagamentos/{pagamento_id}/mock`
+- **Pré-condição:** Estar autenticado como o cliente responsável pelo pedido pendente.
+- **Entrada:** `{ resultado: "APROVADO" }`
+- **Resultado esperado:** HTTP 200 – Mensagem informando que o pagamento foi aprovado.
+- **Evidência:** Processamento de pagamento MOCK aprovado.
+
+#### Etapa 7 – Atualização de Pedido com Pagamento Aprovado
+
+**T21 – Login do atendente responsável pela loja**
+
+- **Endpoint:** `POST /auth/login`
+- **Pré-condição:** Possuir uma conta de atendente associada à mesma loja em que o pedido foi realizado.
+- **Entrada:** `{ email, senha }`
+- **Resultado esperado:** HTTP 200 – Mensagem de confirmação, informações do usuário (`id`, `nome`, `role`, `loja`) e token de acesso.
+- **Evidência:** Login do atendente responsável pelo pedido aprovado.
+
+**T22 – Consultar pedidos pendentes da loja**
+
+- **Endpoint:** `GET /pedidos?page=1&limit=10&loja_id=1&status_pedido=PENDENTE`
+- **Pré-condição:** Estar autenticado como atendente associado à loja consultada.
+- **Entrada:** Nenhuma.
+- **Resultado esperado:** HTTP 200 – Informações dos pedidos, incluindo `id`, `cliente_id`, `loja_id`, `canal_pedido`, `status_pedido`, `valor_total`, `data_pedido` e `status_pagamento`.
+- **Evidência:** Consulta dos pedidos pendentes da loja de atuação.
+
+**T23 – Atendente atualizando pedido com pagamento aprovado**
+
+- **Endpoint:** `PUT /pedidos/{pedido_id}`
+- **Pré-condição:** Estar autenticado como atendente da mesma loja do pedido, cujo pagamento foi aprovado.
+- **Entrada:** `{ status_pedido: "FINALIZADO" }`
+- **Resultado esperado:** HTTP 200 – Mensagem de confirmação da atualização do pedido.
+- **Evidência:** Atendente alterando o status de um pedido com pagamento aprovado.
+
+**T24 – Consultar pedidos finalizados da loja**
+
+- **Endpoint:** `GET /pedidos?page=1&limit=10&loja_id=1&status_pedido=FINALIZADO`
+- **Pré-condição:** Estar autenticado como atendente associado à loja consultada e possuir um pedido finalizado.
+- **Entrada:** Nenhuma.
+- **Resultado esperado:** HTTP 200 – Informações dos pedidos finalizados, incluindo `id`, `cliente_id`, `loja_id`, `canal_pedido`, `status_pedido`, `valor_total`, `data_pedido` e `status_pagamento`.
+- **Evidência:** Consulta dos pedidos finalizados na loja de atuação.
 

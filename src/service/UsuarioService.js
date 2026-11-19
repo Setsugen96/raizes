@@ -21,33 +21,30 @@ class UsuarioService {
         usuario.role = validarValor(usuario.role, rolesDisponiveis, "Role inválida" )
     
         // Verifica se já existe um Gerente vinculado a loja
-        if(usuario.role === 'GERENTE') {
+        if(usuario.role === 'GERENTE' || usuario.role === "ATENDENTE") {
 
-            const gerente = await UsuarioModel.findGerenteById(usuario.loja_id)
-
-            if(gerente) {
-                throw new ErroConflito("Essa loja já possui um gerente")
-            }
-        }
-
-        // Verifica se em caso de tentativa de registro de GERENTE E ATENDENTE está sendo
-        // informado o loja_id
-        if(usuario.role === "GERENTE" || usuario.role === "ATENDENTE" ) {
-
-             if(usuario.loja_id === undefined) {
+            if(!usuario.loja_id) {
 
                 throw new ErroValidacao("Associar um Gerente ou Atendente a uma loja é obrigatório")
             }
-            // Validação de ID para retornar erro em caso de número de ID negativo, vazio ou quando não for um número inteiro
-            usuario.loja_id = validarId(usuario.loja_id)
 
-            //Busca e verificação pra ver se a loja_id existe no banco
+            // Valida ID e busca a loja pra verificar se ela existe
+            usuario.loja_id = validarId(usuario.loja_id)
             const loja = await LojaModel.findById(usuario.loja_id)
 
             if(!loja) {
                 throw new ErroValidacao("Loja não foi encontrada")
             }
-      
+            
+            // Verificar se já existe um Gerente associado a loja
+            if(usuario.role === "GERENTE")  {
+                const gerente = await UsuarioModel.findGerenteById(usuario.loja_id)
+                
+                if(gerente) {
+                    throw new ErroConflito("Essa loja já possui um gerente")
+                }
+            }
+
         } else {
             // Validação em caso de tentativa de vincular um Cliente ou Administrador a uma Loja.
             // Apenas Gerente e Atendente possui o atributo de loja_id
@@ -55,8 +52,8 @@ class UsuarioService {
                 throw new ErroValidacao("Apenas Gerentes e Atendentes podem ser associados a lojas.")
             }
         }
-        const novo_usuario = await UsuarioModel.create(usuario)
-        
+
+        const novo_usuario = await UsuarioModel.create(usuario)  
         // Inicializa o registro de Fidelidade ao novo cliente(com valores padrão)
         if(novo_usuario.role === 'CLIENTE') {
 

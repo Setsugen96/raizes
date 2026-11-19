@@ -11,6 +11,7 @@ export const estadosDisponveis = new Set([
 ])
 
 export const rolesDisponiveis = new Set([
+    "administrador",
     "cliente",
     "gerente",
     "atendente"

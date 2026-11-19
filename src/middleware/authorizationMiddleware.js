@@ -59,8 +59,14 @@ class AuthMiddleware {
             if(req.usuario.role === 'ADMINISTRADOR') {
                 return next()
             }
+            
+            const roleBody = req.body.role.toUpperCase()
+            if(req.usuario.role === 'GERENTE' && roleBody === "ADMINISTRADOR") {
+                return res.status(403).json({
+                    message: "Erro, ação recusada pelo sistema."
+                })
+            }
 
-            const roleBody = validarValor(req.body.role, rolesDisponiveis, "Role inválida")
             if(req.usuario.role === 'GERENTE' && roleBody === 'ATENDENTE') {
                if(req.usuario.loja_id !== req.body.loja_id) {
                     return res.status(403).json({
