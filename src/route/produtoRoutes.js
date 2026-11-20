@@ -49,7 +49,7 @@ const ProdutoRota = Router()
  *       403:
  *         description: Usuário sem permissão
  *       409:
- *         description: Já existe um produto com esse nome
+ *         description: Já existe um produto com esse nome nesse estado
  *       500:
  *         description: Erro interno do servidor
  */

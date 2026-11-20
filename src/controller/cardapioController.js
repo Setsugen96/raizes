@@ -125,6 +125,12 @@ class CardapioController {
                      message: error.message
                 })
             }
+
+            if(error.name == "ErroConflito") {
+                return res.status(409).json({
+                     message: error.message
+                })
+            }
         
             return res.status(500).json({
                 message: error.message

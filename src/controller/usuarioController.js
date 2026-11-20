@@ -36,6 +36,12 @@ class UsuarioController {
                 })
             }
 
+            if(error.name === "ErroNaoEncontrado") {
+                return res.status(404).json({
+                    message:error.message 
+                })
+            }
+
             return res.status(500).json({
                 message:error.message
             })
@@ -158,6 +164,12 @@ class UsuarioController {
 
             if(error.name === "ErroNaoEncontrado") {
                 return res.status(404).json({
+                    message: error.message
+                })
+            }
+
+            if(error.name === "ErroConflito") {
+                return res.status(409).json({
                     message: error.message
                 })
             }

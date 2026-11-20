@@ -46,7 +46,7 @@ const PagamentoRota = Router()
  *       404:
  *         description: Pagamento não encontrado.
  *       409:
- *         description: Pagamento não está pendente.
+ *         description: Pagamento já foi feito.
  *       500:
  *         description: Erro interno do servidor.
  */

@@ -67,7 +67,7 @@ const PedidoRota = Router()
  *       403:
  *         description: Usuário não possui permissão para cadastrar pedidos.
  *       404:
- *         description: Cliente, loja ou produto não encontrado.
+ *         description: Loja ou produto não encontrado.
  *       409:
  *         description: Cliente já possui pedido em andamento ou produto indisponível no cardápio.
  *       500:
@@ -223,7 +223,7 @@ AuthMiddleware.autorizarListagemPedidos(), PedidoController.index)
  *       404:
  *         description: Pedido não encontrado.
  *       409:
- *         description: Não é possível alterar o status de um pedido finalizado.
+ *         description: Não é possível alterar o status de um pedido finalizado ou que o pagamento ainda não foi feito.
  *       500:
  *         description: Erro interno do servidor.
  */

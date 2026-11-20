@@ -33,11 +33,11 @@ const CardapioRota = Router()
  *               data_inicio:
  *                 type: string
  *                 format: date
- *                 example: "01-01-2026"
+ *                 example: "25/11/2026"
  *               data_fim:
  *                 type: string
  *                 format: date
- *                 example: "30-01-2026"
+ *                 example: "30/11/2026"
  *     responses:
  *       201:
  *         description: Cardápio cadastrado com sucesso
@@ -77,11 +77,9 @@ CardapioController.store)
  *       200:
  *         description: Linha do cardápio encontrada com sucesso
  *       400:
- *         description: Dados inválidos ou nenhum dado informado
+ *         description: Id inválido
  *       401:
  *         description: Token ausente ou inválido
- *       403:
- *         description: Usuário sem permissão
  *       404:
  *         description: Cardápio não encontrado
  *       500:
@@ -127,8 +125,6 @@ CardapioController.show)
  *         description: Parâmetros de paginação inválidos
  *       401:
  *         description: Token ausente ou inválido
- *       403:
- *         description: Usuário sem permissão
  *       500:
  *         description: Erro interno do servidor
  */
@@ -169,16 +165,16 @@ AuthMiddleware.autorizarAcessoCardapio(), CardapioController.index)
  *               data_inicio:
  *                 type: string
  *                 format: date
- *                 example: "01-01-2026"
+ *                 example: "30/11/2026"
  *               data_fim:
  *                 type: string
  *                 format: date
- *                 example: "30-01-2026"
+ *                 example: "02/02/2027"
  *     responses:
  *       200:
  *         description: Cardápio alterado com sucesso
  *       400:
- *         description: Dados inválidos ou nenhum dado informado para atualização
+ *         description: Id inválido ou dados não informados
  *       401:
  *         description: Token ausente ou inválido
  *       403:
@@ -186,7 +182,7 @@ AuthMiddleware.autorizarAcessoCardapio(), CardapioController.index)
  *       404:
  *         description: Cardápio não encontrado
  *       409:
- *         description: Esse produto já existe na loja
+ *         description: Loja e Produto não podem ser de estados diferentes
  *       500:
  *         description: Erro interno do servidor
  */
@@ -215,7 +211,7 @@ AuthMiddleware.autorizarGerenciamentoCardapio(), CardapioController.update)
  *       200:
  *         description: Cardápio deletado com sucesso
  *       400:
- *         description: Dados inválidos ou nenhum dado informado.
+ *         description: Id inválido
  *       401:
  *         description: Token ausente ou inválido
  *       403:

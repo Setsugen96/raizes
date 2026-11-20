@@ -94,13 +94,13 @@ UsuarioRota.post('/usuarios/cliente', UsuarioController.storeCliente)
  *       201:
  *         description: Funcionário cadastrado com sucesso
  *       400:
- *         description: Dados inválidos, loja inexistente ou loja já possui gerente
+ *         description: Dados inválidos, loja inexistente
  *       401:
  *         description: Token ausente ou inválido
  *       403:
  *         description: Usuário sem permissão para cadastrar funcionários
  *       409:
- *         description: Email já registrado
+ *         description: Email já registrado ou loja já possue um gerente
  *       500:
  *         description: Erro interno do servidor
  */
@@ -256,11 +256,11 @@ UsuarioRota.get('/usuarios', AuthMiddleware.autenticarToken, AuthMiddleware.auto
  *       401:
  *         description: Token ausente ou inválido.
  *       403:
- *         description: Acesso negado para atualizar o usuário ou alterar role/loja_id.
+ *         description: Acesso negado ao tentar atualizar a conta de outros usuários.
  *       404:
- *         description: Usuário não encontrado.
+ *         description: Usuário ou Loja não encontrado.
  *       409:
- *         description: Email já registrado.
+ *         description: Email já registrado ou Loja já tem um Gerente.
  *       500:
  *         description: Erro interno do servidor.
  */

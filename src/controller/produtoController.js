@@ -20,7 +20,7 @@ class ProdutoController {
 
             if(error.code === "ER_DUP_ENTRY") {
                 return res.status(409).json({
-                    message: "Já existe um produto com esse nome."
+                    message: "Já existe um produto nesse estado com esse nome."
                 })
             }
 

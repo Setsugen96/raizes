@@ -1,7 +1,7 @@
 import CardapioModel from "../model/cardapioModel.js"
 import LojaModel from "../model/lojaModel.js"
 import ProdutoModel from "../model/produtoModel.js"
-import {ErroValidacao, ErroNaoEncontrado, formatarData, validarDatas, validarId} from "./utils.js"
+import {ErroValidacao, ErroNaoEncontrado, formatarData, validarDatas, validarId, ErroConflito} from "./utils.js"
 
 
 
@@ -194,7 +194,7 @@ class CardapioService {
             const lojaCardapio = await LojaModel.findById(cardapioExistente.loja_id)
             //Verifica se o estado do produto para qual deseja atualizar é igual ao estado da loja do cardapio procurado
             if(produto.estado !== lojaCardapio.estado) {
-                throw new ErroValidacao("Estado do produto e da loja não podem ser diferentes.")
+                throw new ErroConflito("Estado do produto e da loja não podem ser diferentes.")
             }
         }
 

@@ -97,6 +97,24 @@ class AuthMiddleware {
         }
     }
 
+    autorizarAtualizacaoLoja() {
+
+        return(req, res, next) => {
+
+            if(req.usuario.role === 'ADMINISTRADOR') {
+                return next()
+            }
+            
+            if(Number(req.usuario.loja_id) !== Number(req.params.id)) {
+                return res.status(403).json({
+                    message: "Usuário só pode atualizar dados da sua própria loja de atuação."
+                })
+            }
+
+            next()
+        }
+    }
+
     autorizarAcessoFuncionario() {
 
         return async (req, res, next) => {

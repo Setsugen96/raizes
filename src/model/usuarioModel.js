@@ -56,6 +56,7 @@ class UsuarioModel {
         let sql = `
             SELECT
                 usuario.id,
+                usuario.nome,
                 usuario.email,
                 usuario.role,
                 usuario.loja_id,

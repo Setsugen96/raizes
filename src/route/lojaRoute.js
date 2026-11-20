@@ -68,11 +68,9 @@ LojaRota.post('/lojas', AuthMiddleware.autenticarToken, AuthMiddleware.autorizar
  *       200:
  *         description: Loja encontrada com sucesso
  *       400:
- *         description: Dados inválidos ou nenhum dado informado
+ *         description: Id inválido
  *       401:
- *         description: Token ausente ou inválido
- *       403:
- *         description: Usuário sem permissão
+ *         description: Token ausente ou inválido  
  *       404:
  *         description: Loja não encontrada
  *       500:
@@ -117,8 +115,6 @@ LojaRota.get('/lojas/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autori
  *         description: Parâmetros de paginação ou estado informado inválido.
  *       401:
  *         description: Token ausente ou inválido
- *       403:
- *         description: Usuário sem permissão
  *       500:
  *         description: Erro interno do servidor
  */
@@ -171,7 +167,7 @@ LojaRota.get('/lojas', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarR
  *       500:
  *         description: Erro interno do servidor
  */
-LojaRota.put('/lojas/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'),  LojaController.update)
+LojaRota.put('/lojas/:id', AuthMiddleware.autenticarToken, AuthMiddleware.autorizarRoles('ADMINISTRADOR', 'GERENTE'), AuthMiddleware.autorizarAtualizacaoLoja(),  LojaController.update)
 
 
 /**
@@ -227,7 +223,7 @@ LojaController.calcularFaturamento)
  *       200:
  *         description: Loja excluída com sucesso
  *       400:
- *          description: Dados inválidos ou nenhum dado informado
+ *          description: Id inválido
  *       401:
  *         description: Token ausente ou inválido
  *       403:

@@ -8,6 +8,7 @@ A API possui recursos para gerenciamento de usuários, lojas, produtos, cardápi
 
 O sistema utiliza autenticação JWT e controle de acesso baseado na role dos usuários.
 
+
 ## 2 - Tecnologias utilizadas
 
 - **Node.js 24.22.1** – Ambiente de execução JavaScript.
@@ -139,7 +140,7 @@ Após esse procedimento, o token será utilizado automaticamente nas requisiçõ
 | Atendente | atendente@raizes.com | 1234 |
 | Cliente | cliente@raizes.com | 1234 |
 
-### 6.2 - Testes no Insomnia ou Postman
+### 6.2 - Teste no Insomnia ou Postman
 Para testar a API nesses aplicativos, é necessário enviar o token JWT no cabeçalho HTTP (`Headers`) de cada requisição protegida.
 
 Utilize o seguinte formato:

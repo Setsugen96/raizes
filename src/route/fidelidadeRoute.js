@@ -56,10 +56,6 @@ const FidelidadeRota = Router()
  *         description: Token ausente ou inválido.
  *       403:
  *         description: Cliente tentou atualizar o registro de outro usuário.
- *       404:
- *         description: Registro de fidelidade não encontrado.
- *       409:
- *         description: Conflito ao atualizar o consentimento.
  *       500:
  *         description: Erro interno do servidor.
  */
@@ -91,8 +87,6 @@ AuthMiddleware.autorizarFidelidade() ,FidelidadeController.update)
  *     responses:
  *       200:
  *         description: Status de consentimento encontrado com sucesso.
- *       400:
- *         description: ID inválido.
  *       401:
  *         description: Token ausente ou inválido.
  *       403:

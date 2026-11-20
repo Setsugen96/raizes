@@ -82,6 +82,12 @@ class LojaController {
 
         } catch (error) {
 
+            if(error.name === "ErroValidacao") {
+                return res.status(400).json({
+                    message: error.message
+                })
+            }
+
             if(error.name === "ErroNaoEncontrado") {
                 return res.status(404).json({
                     message: error.message

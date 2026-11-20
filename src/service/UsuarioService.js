@@ -33,7 +33,7 @@ class UsuarioService {
             const loja = await LojaModel.findById(usuario.loja_id)
 
             if(!loja) {
-                throw new ErroValidacao("Loja não foi encontrada")
+                throw new ErroNaoEncontrado("Loja não foi encontrada")
             }
             
             // Verificar se já existe um Gerente associado a loja
@@ -141,14 +141,19 @@ class UsuarioService {
 
                 if(gerente) {
                     
-                    throw new ErroValidacao("Essa loja já tem gerente ")
+                    throw new ErroConflito("Essa loja já tem gerente ")
                 }
             }      
         }
 
         if((usuario_atualizado.role ?? usuario.role) === 'CLIENTE' && usuario_atualizado.loja_id !== undefined) {
-            throw new ErroValidacao("Cliente não pode ser vinculado a uma loja")
+            throw new ErroConflito("Cliente não pode ser vinculado a uma loja")
         }
+
+        if(usuario.role === 'CLIENTE' && usuario_atualizado.role !== undefined) {
+            throw new ErroConflito("Não é permitido alterar role de Cliente.")
+        }
+        
 
         // Se tentar alterar o loja_id faz validação e verifica se a loja pra qual vai ser atualizada existe
         if(usuario_atualizado.loja_id !== undefined) {
@@ -157,7 +162,7 @@ class UsuarioService {
             const loja = await LojaModel.findById(usuario_atualizado.loja_id)
 
             if(!loja) {
-                throw new ErroValidacao("Loja não foi encontrada")
+                throw new ErroNaoEncontrado("Loja não foi encontrada")
             }
         }
 
